@@ -17,8 +17,8 @@ from .simulations.runner import ejecutar_simulacion, ejecutar_todas, TODAS_LAS_S
 def banner():
     return """
 ╔══════════════════════════════════════════════════════════════╗
-║        ANDROIDE ÉTICO — PROTOTIPO MVP v2                    ║
-║        Kernel de Conciencia Artificial                       ║
+║        ANDROIDE ÉTICO — PROTOTIPO MVP v4                    ║
+║        Kernel de Conciencia Artificial + Capa LLM            ║
 ║        Fundación Ex Machina — 2026                           ║
 ╚══════════════════════════════════════════════════════════════╝
 
@@ -30,10 +30,12 @@ def banner():
     ✓ Voluntad Sigmoide (función de decisión)
     ✓ Simpático-Parasimpático (regulador corporal)
     ✓ Memoria Narrativa (identidad por relatos)
-    ✓ Uchi-Soto (círculos de confianza)          [NUEVO]
-    ✓ Locus de Control (atribución causal)        [NUEVO]
-    ✓ Sueño Ψ (auditoría retrospectiva)           [NUEVO]
-    ✓ Mock DAO (gobernanza ética simulada)         [NUEVO]
+    ✓ Uchi-Soto (círculos de confianza)
+    ✓ Locus de Control (atribución causal)
+    ✓ Sueño Ψ (auditoría retrospectiva)
+    ✓ Mock DAO (gobernanza ética simulada)
+    ✓ Variabilidad Bayesiana (ruido controlado)
+    ✓ Capa LLM (lenguaje natural)                [NUEVO v4]
 
   Ejecutando simulaciones...
 """

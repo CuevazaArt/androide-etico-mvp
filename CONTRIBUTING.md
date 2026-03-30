@@ -26,6 +26,7 @@ Los módulos están en `src/modules/`. Cada uno es independiente:
 | `sueno_psi.py` | ✅ Funcional | Re-evaluación bayesiana completa |
 | `mock_dao.py` | ✅ Funcional | Migrar a smart contracts en testnet |
 | `variability.py` | ✅ Funcional | Perfiles de variabilidad por contexto |
+| `llm_layer.py` | ✅ Funcional | Soporte multi-modelo, fine-tuning ético |
 
 ### 3. Módulos pendientes (por construir)
 - [ ] Polo de debilidad (vulnerabilidades narrativas intencionales)

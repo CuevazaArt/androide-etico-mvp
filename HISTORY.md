@@ -1,0 +1,119 @@
+# Historial de Desarrollo — Androide Ético MVP
+
+Registro de la evolución del proyecto desde su fase conceptual hasta la versión
+actual. Este archivo preserva decisiones arquitectónicas clave, módulos
+experimentales y artefactos que fueron parte del camino.
+
+---
+
+## v1.0 — Marzo 2026 | Fase conceptual
+
+- 40+ documentos de diseño analizados y consolidados.
+- Arquitectura de 7 capas documentada.
+- Formalización matemática completa.
+- Bibliografía de 40+ referencias en 12 disciplinas.
+- **Artefacto principal:** `Androide_Etico_Analisis_Integral_v3.docx`
+  (disponible en `docs/`).
+
+## v2.0 — Marzo 2026 | Kernel base
+
+Primer prototipo funcional con los módulos fundacionales:
+
+| Módulo | Archivo | Rol |
+|--------|---------|-----|
+| Mal Absoluto | `mal_absoluto.py` | Fusible ético blindado |
+| Buffer Precargado | `buffer.py` | Constitución ética inmutable (8 principios) |
+| Motor Bayesiano | `bayesian_engine.py` | Evaluación probabilística de impacto |
+| Polos Éticos | `ethical_poles.py` | Arbitraje multipolar (compasivo, conservador, optimista) |
+| Voluntad Sigmoide | `sigmoid_will.py` | Función de decisión continua |
+| Simpático-Parasimpático | `sympathetic.py` | Regulador corporal |
+| Memoria Narrativa | `narrative.py` | Identidad por relatos con estado corporal |
+
+- 9 escenarios de simulación de complejidad ética creciente.
+- Dependencia única: `numpy`.
+
+### Módulos experimentales (rama divergente, no incluidos en v3+)
+
+Estos módulos fueron explorados en una rama paralela y representan ideas
+valiosas que aún no se han integrado en la versión canónica:
+
+- **`augenesis.py`** — Augénesis narrativa: condensaba contextos vividos en
+  una línea de identidad en formación (16 hilos máximo). Concepto precursor
+  de la Memoria Narrativa expandida.
+- **`calibracion.py`** — Protocolo de calibración dinámica: ajustaba umbrales
+  del motor bayesiano según la frecuencia reciente de modos de decisión
+  (ventana de 12 episodios). Funcionalidad parcialmente absorbida por el
+  Sueño Ψ en v3.
+- **`locus_control.py`** — Locus de control bayesiano (versión inicial):
+  mantenía P(control interno efectivo) como escalar en (0,1) y modulaba
+  incertidumbre percibida. Reescrito completamente como `locus.py` en v3
+  con atribución causal bayesiana completa.
+
+## v3.0 — Marzo 2026 | Kernel integrado
+
+Incorporó 5 módulos nuevos y el suite de tests formales:
+
+| Módulo | Archivo | Rol |
+|--------|---------|-----|
+| Uchi-Soto | `uchi_soto.py` | Círculos concéntricos de confianza con dialéctica defensiva |
+| Locus de Control | `locus.py` | Atribución causal bayesiana (reescritura de `locus_control.py`) |
+| Sueño Ψ | `sueno_psi.py` | Auditoría retrospectiva con recalibración |
+| Mock DAO | `mock_dao.py` | Gobernanza ética simulada con votación cuadrática |
+| Variabilidad | `variability.py` | Ruido bayesiano controlado para naturalidad |
+
+- **38 tests** verificando 9 propiedades éticas invariantes.
+- Test de coherencia bajo variabilidad (100 runs × 9 simulaciones).
+- Dashboard React (`dashboard_androide_etico.jsx`) para visualización
+  interactiva de las simulaciones (artefacto de demostración, no integrado
+  en el backend Python).
+
+## v4.0 — Marzo 2026 | Capa LLM (versión actual)
+
+Incorporó la capa de lenguaje natural sin comprometer la separación
+kernel/comunicación:
+
+| Módulo | Archivo | Rol |
+|--------|---------|-----|
+| Capa LLM | `llm_layer.py` | Percepción + comunicación + narrativa en lenguaje natural |
+
+### Principio de diseño: **el LLM no decide, el kernel decide**
+
+- **Percepción:** situación en texto → señales numéricas para el kernel.
+- **Comunicación:** decisión del kernel → respuesta verbal (tono, gestos HAX,
+  voz en off).
+- **Narrativa:** evaluación multipolar → moralejas ricas y humanamente
+  comprensibles.
+- Soporte dual: API de Anthropic (Claude) o templates locales sin dependencia
+  externa.
+- Método `procesar_natural()` en kernel para ciclo completo
+  texto → decisión → respuesta verbal → moralejas.
+
+---
+
+## Artefactos históricos (no incluidos en el repo, disponibles localmente)
+
+| Artefacto | Descripción |
+|-----------|-------------|
+| `androide-etico-mvp-v2/` | Snapshot del código v2 |
+| `androide-etico-mvp-v3/` | Snapshot del código v3 (con `.pytest_cache`) |
+| `androide-etico-mvp/` | Rama divergente con módulos experimentales |
+| `files/androide-etico-mvp-github-ready/` | Exportación empaquetada pre-v4 |
+| `files/dashboard_androide_etico.jsx` | Dashboard React de demostración (v3) |
+| `EthosMVP/` | Meta-repo inicial de gobernanza colaborativa |
+| `*.tar.gz` | Archivos comprimidos de cada versión |
+| `Analisis_Integral_*.pdf` | Documentos de análisis integral en PDF |
+
+---
+
+## Roadmap (pendientes)
+
+- [ ] Polo de debilidad (vulnerabilidades narrativas intencionales)
+- [ ] Perdón algorítmico (decaimiento de recuerdos negativos)
+- [ ] Protocolo de inmortalidad (backup/restore de identidad)
+- [ ] Augénesis narrativa (creación de almas sintéticas — retomar concepto de v2)
+- [ ] Protocolo de calibración DAO (ajuste gradual de parámetros en testnet)
+- [ ] Modo offline completo (5 capas de autonomía)
+
+---
+
+Fundación Ex Machina — 2026

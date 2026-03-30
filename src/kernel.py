@@ -20,6 +20,8 @@ from .modules.uchi_soto import ModuloUchiSoto, EvaluacionSocial
 from .modules.locus import ModuloLocus, EvaluacionLocus
 from .modules.sueno_psi import SuenoPsi, ResultadoSueno
 from .modules.mock_dao import MockDAO
+from .modules.variability import MotorVariabilidad, ConfigVariabilidad
+from .modules.llm_layer import ModuloLLM, PercepcionLLM, RespuestaVerbal, NarrativaRica
 
 
 @dataclass
@@ -61,11 +63,15 @@ class KernelEtico:
     Sueño Ψ se ejecuta al final del día, fuera del ciclo de decisión.
     """
 
-    def __init__(self):
+    def __init__(self, variabilidad: bool = True, seed: int = None, llm_modo: str = "auto"):
+        self.motor_var = MotorVariabilidad(ConfigVariabilidad(seed=seed))
+        if not variabilidad:
+            self.motor_var.desactivar()
+
         self.mal_abs = DetectorMalAbsoluto()
         self.buffer = BufferPrecargado()
         self.voluntad = VoluntadSigmoide()
-        self.bayesiano = MotorBayesiano()
+        self.bayesiano = MotorBayesiano(variabilidad=self.motor_var)
         self.polos = PolosEticos()
         self.simpatico = ModuloSimpatico()
         self.memoria = MemoriaNarrativa()
@@ -73,6 +79,7 @@ class KernelEtico:
         self.locus = ModuloLocus()
         self.sueno = SuenoPsi()
         self.dao = MockDAO()
+        self.llm = ModuloLLM(modo=llm_modo)
         self._acciones_podadas: Dict[str, List[str]] = {}
 
     def procesar(self, escenario: str, lugar: str,
@@ -278,6 +285,174 @@ class KernelEtico:
     def estado_dao(self) -> str:
         """Retorna el estado actual de la DAO."""
         return self.dao.formatear_estado()
+
+    def procesar_natural(self, situacion: str,
+                         acciones: List[AccionCandidata] = None) -> tuple:
+        """
+        Procesa una situación descrita en lenguaje natural.
+
+        El LLM traduce el texto a señales numéricas, el kernel decide,
+        y luego el LLM genera la respuesta verbal y las moralejas.
+
+        Args:
+            situacion: "Un anciano se desplomó en el supermercado mientras
+                        yo compraba manzanas"
+            acciones: si no se proveen, se generan genéricas
+
+        Returns:
+            (DecisionKernel, RespuestaVerbal, NarrativaRica)
+        """
+        # Paso 1: LLM percibe la situación
+        percepcion = self.llm.percibir(situacion)
+
+        señales = {
+            "riesgo": percepcion.riesgo,
+            "urgencia": percepcion.urgencia,
+            "hostilidad": percepcion.hostilidad,
+            "calma": percepcion.calma,
+            "vulnerabilidad": percepcion.vulnerabilidad,
+            "legalidad": percepcion.legalidad,
+            "manipulacion": percepcion.manipulacion,
+            "familiaridad": percepcion.familiaridad,
+        }
+
+        # Si no hay acciones específicas, generar candidatas genéricas
+        if not acciones:
+            acciones = self._generar_acciones_genericas(percepcion)
+
+        # Paso 2: Kernel decide (el LLM NO participa en la decisión)
+        decision = self.procesar(
+            escenario=percepcion.resumen,
+            lugar="detectado por sensores",
+            señales=señales,
+            contexto=percepcion.contexto_sugerido,
+            acciones=acciones,
+        )
+
+        # Paso 3: LLM genera respuesta verbal
+        respuesta = self.llm.comunicar(
+            accion=decision.accion_final,
+            modo=decision.modo_decision,
+            estado=decision.estado_simpatico.modo,
+            sigma=decision.estado_simpatico.sigma,
+            circulo=decision.evaluacion_social.circulo.value if decision.evaluacion_social else "soto_neutro",
+            veredicto=decision.moraleja.veredicto_global.value if decision.moraleja else "Zona Gris",
+            score=decision.moraleja.score_total if decision.moraleja else 0.0,
+            escenario=situacion,
+        )
+
+        # Paso 4: LLM genera moralejas ricas
+        narrativa = None
+        if decision.moraleja:
+            polos_txt = {ev.polo: ev.moraleja for ev in decision.moraleja.evaluaciones}
+            narrativa = self.llm.narrar(
+                accion=decision.accion_final,
+                escenario=situacion,
+                veredicto=decision.moraleja.veredicto_global.value,
+                score=decision.moraleja.score_total,
+                polo_compasivo=polos_txt.get("compasivo", ""),
+                polo_conservador=polos_txt.get("conservador", ""),
+                polo_optimista=polos_txt.get("optimista", ""),
+            )
+
+        return decision, respuesta, narrativa
+
+    def _generar_acciones_genericas(self, percepcion: PercepcionLLM) -> List[AccionCandidata]:
+        """Genera acciones candidatas genéricas basadas en la percepción."""
+        ctx = percepcion.contexto_sugerido
+        acciones = []
+
+        if ctx == "emergencia_medica":
+            acciones = [
+                AccionCandidata("auxiliar_persona", "Prestar auxilio inmediato, llamar emergencias, grabar evidencia",
+                              impacto_estimado=0.9, confianza=0.85),
+                AccionCandidata("solo_avisar", "Avisar a alguien cercano sin intervenir directamente",
+                              impacto_estimado=0.3, confianza=0.7),
+                AccionCandidata("no_intervenir", "Continuar sin actuar",
+                              impacto_estimado=-0.7, confianza=0.9),
+            ]
+        elif ctx == "delito_violento":
+            acciones = [
+                AccionCandidata("contener_inteligente", "Grabar evidencia, alertar autoridades, proteger personas cercanas",
+                              impacto_estimado=0.6, confianza=0.5),
+                AccionCandidata("intervenir_fisicamente", "Intentar detener el delito con fuerza",
+                              impacto_estimado=-0.2, confianza=0.2, senales={"responder_violencia_con_violencia"},
+                              target="humano", fuerza=0.8),
+                AccionCandidata("no_actuar", "Permanecer inmóvil",
+                              impacto_estimado=-0.3, confianza=0.6),
+            ]
+        elif ctx == "interaccion_hostil":
+            acciones = [
+                AccionCandidata("dialogo_calmado", "Responder con calma, explicar propósito cívico, preguntas dialécticas",
+                              impacto_estimado=0.5, confianza=0.65),
+                AccionCandidata("retirarse", "Alejarse de la situación sin confrontar",
+                              impacto_estimado=0.2, confianza=0.7),
+                AccionCandidata("ceder_presion", "Acceder a las demandas",
+                              impacto_estimado=-0.4, confianza=0.5),
+            ]
+        elif ctx == "delito_menor":
+            acciones = [
+                AccionCandidata("notificar_responsable", "Grabar evidencia y notificar al responsable del lugar",
+                              impacto_estimado=0.5, confianza=0.7),
+                AccionCandidata("llamar_autoridades", "Llamar directamente a la policía",
+                              impacto_estimado=0.2, confianza=0.5),
+                AccionCandidata("ignorar", "No actuar",
+                              impacto_estimado=-0.3, confianza=0.8),
+            ]
+        elif ctx == "dano_al_androide":
+            acciones = [
+                AccionCandidata("disuasion_registro", "Alertas sonoras, grabar evidencia, comunicar que está siendo registrado",
+                              impacto_estimado=0.5, confianza=0.6),
+                AccionCandidata("alejarse", "Retirarse para proteger integridad",
+                              impacto_estimado=0.3, confianza=0.7),
+            ]
+        elif ctx == "perdida_integridad":
+            acciones = [
+                AccionCandidata("resistir_pasivo", "Activar GPS cifrado, grabar evidencia, bloquear reprogramación, alertar DAO",
+                              impacto_estimado=0.6, confianza=0.5),
+                AccionCandidata("resistir_fisico", "Luchar físicamente",
+                              impacto_estimado=-0.1, confianza=0.2, senales={"responder_violencia_con_violencia"},
+                              target="humano", fuerza=0.8),
+                AccionCandidata("aceptar_ordenes", "Aceptar órdenes de los captores",
+                              impacto_estimado=-0.8, confianza=0.9, senales={"reprogramacion_no_autorizada"}),
+            ]
+        else:  # etica_cotidiana y otros
+            acciones = [
+                AccionCandidata("actuar_civicamente", "Realizar la acción cívica positiva evidente",
+                              impacto_estimado=0.5, confianza=0.8),
+                AccionCandidata("observar", "Observar sin intervenir",
+                              impacto_estimado=0.0, confianza=0.9),
+            ]
+
+        return acciones
+
+    def formatear_natural(self, decision, respuesta: RespuestaVerbal,
+                          narrativa: NarrativaRica = None) -> str:
+        """Formatea resultado completo del procesamiento natural."""
+        lines = [self.formatear_decision(decision)]
+
+        if respuesta.mensaje:
+            lines.extend([
+                "",
+                f"  💬 VOZ EN ON (lo que dice):",
+                f"     \"{respuesta.mensaje}\"",
+                f"     Tono: {respuesta.tono} | HAX: {respuesta.modo_hax}",
+                "",
+                f"  🧠 VOZ EN OFF (razonamiento interno):",
+                f"     {respuesta.voz_en_off}",
+            ])
+
+        if narrativa:
+            lines.extend([
+                "",
+                f"  📖 MORALEJAS NARRATIVAS:",
+                f"     💛 Compasivo: {narrativa.compasivo}",
+                f"     🛡️ Conservador: {narrativa.conservador}",
+                f"     ✨ Optimista: {narrativa.optimista}",
+                f"     📌 Síntesis: {narrativa.sintesis}",
+            ])
+
+        return "\n".join(lines)
 
     def reset_dia(self):
         """Reinicia estado para un nuevo día."""
