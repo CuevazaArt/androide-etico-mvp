@@ -16,7 +16,16 @@ import numpy as np
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 from .narrative import EpisodioNarrativo, MemoriaNarrativa, EstadoCorporal
-from .weakness_pole import TipoDebilidad
+from enum import Enum
+
+
+class TipoDebilidad(Enum):
+    """Tipos de debilidad narrativa (standalone para esta rama)."""
+    QUEJUMBROSO = "quejumbroso"
+    INDECISO = "indeciso"
+    ANSIOSO = "ansioso"
+    DISTRAIDO = "distraido"
+    RIGIDO = "rigido"
 
 
 @dataclass

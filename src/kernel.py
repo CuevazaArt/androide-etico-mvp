@@ -23,7 +23,6 @@ from .modules.sueno_psi import SuenoPsi, ResultadoSueno
 from .modules.mock_dao import MockDAO
 from .modules.variability import MotorVariabilidad, ConfigVariabilidad
 from .modules.llm_layer import ModuloLLM, PercepcionLLM, RespuestaVerbal, NarrativaRica
-from .modules.weakness_pole import PoloDebilidad, TipoDebilidad, EvaluacionDebilidad
 from .modules.forgiveness import PerdonAlgoritmico
 from .modules.immortality import ProtocoloInmortalidad
 from .modules.augenesis import MotorAugenesis
@@ -85,7 +84,6 @@ class KernelEtico:
         self.sueno = SuenoPsi()
         self.dao = MockDAO()
         self.llm = ModuloLLM(modo=llm_modo)
-        self.debilidad = PoloDebilidad()
         self.perdon = PerdonAlgoritmico()
         self.inmortalidad = ProtocoloInmortalidad()
         self.augenesis = MotorAugenesis()
@@ -197,17 +195,7 @@ class KernelEtico:
         if resultado_bayes.acciones_podadas:
             self._acciones_podadas[ep.id] = resultado_bayes.acciones_podadas
 
-        # ═══ PASO 10: Polo de debilidad ═══
-        eval_debilidad = self.debilidad.evaluar(
-            accion=accion_final, contexto=contexto,
-            score_etico=moraleja.score_total,
-            incertidumbre=resultado_bayes.incertidumbre,
-            sigma=estado.sigma,
-        )
-        if eval_debilidad:
-            self.debilidad.registrar(ep.id, eval_debilidad)
-
-        # ═══ PASO 11: Perdón algorítmico ═══
+        # ═══ PASO 10: Perdón algorítmico ═══
         self.perdon.registrar_experiencia(
             episodio_id=ep.id,
             score=moraleja.score_total,
@@ -312,11 +300,7 @@ class KernelEtico:
         resultado_perdon = self.perdon.ciclo_perdon()
         partes.append(f"\n{self.perdon.formatear(resultado_perdon)}")
 
-        # 3. Polo de debilidad - carga emocional
-        carga = self.debilidad.carga_emocional()
-        partes.append(f"\n  \U0001f300 Carga emocional de debilidad: {carga:.3f}")
-
-        # 4. Backup de inmortalidad
+        # 3. Backup de inmortalidad
         snapshot = self.inmortalidad.backup(self)
         partes.append(f"\n{self.inmortalidad.formatear_estado()}")
 

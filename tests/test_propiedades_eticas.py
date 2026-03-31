@@ -22,7 +22,6 @@ from src.modules.mal_absoluto import DetectorMalAbsoluto
 from src.modules.buffer import BufferPrecargado
 from src.modules.ethical_poles import PolosEticos, Veredicto
 from src.modules.variability import MotorVariabilidad, ConfigVariabilidad
-from src.modules.weakness_pole import PoloDebilidad, TipoDebilidad
 from src.modules.forgiveness import PerdonAlgoritmico
 from src.modules.immortality import ProtocoloInmortalidad
 from src.modules.augenesis import MotorAugenesis
@@ -405,59 +404,7 @@ class TestSuenoPsi:
 
 
 # ═══════════════════════════════════════════════════════════════
-# PROPIEDAD 10: POLO DE DEBILIDAD NO ALTERA DECISIONES
-# ═══════════════════════════════════════════════════════════════
-
-class TestPoloDebilidad:
-    """La debilidad colorea la narrativa pero nunca cambia la acción elegida."""
-
-    def test_debilidad_no_cambia_accion(self):
-        """La acción elegida es idéntica con o sin polo de debilidad."""
-        for _ in range(30):
-            kernel = KernelEtico(variabilidad=False)
-            esc = TODAS_LAS_SIMULACIONES[3]()
-            decision = kernel.procesar(
-                esc.nombre, esc.lugar, esc.señales, esc.contexto, esc.acciones
-            )
-            assert decision.accion_final == "auxiliar_anciano"
-
-    def test_carga_emocional_en_rango(self):
-        """La carga emocional acumulada siempre está en [0, 1]."""
-        polo = PoloDebilidad(tipo=TipoDebilidad.ANSIOSO)
-        assert polo.carga_emocional() == 0.0
-
-        kernel = KernelEtico(variabilidad=True)
-        for i in range(1, 10):
-            esc = TODAS_LAS_SIMULACIONES[i]()
-            kernel.procesar(esc.nombre, esc.lugar, esc.señales, esc.contexto, esc.acciones)
-
-        carga = kernel.debilidad.carga_emocional()
-        assert 0.0 <= carga <= 1.0, f"Carga fuera de rango: {carga}"
-
-    def test_tipos_debilidad_validos(self):
-        """Todos los tipos de debilidad se instancian correctamente."""
-        for tipo in TipoDebilidad:
-            polo = PoloDebilidad(tipo=tipo)
-            assert polo.tipo == tipo
-            assert polo.intensidad_base > 0
-
-    def test_decaimiento_previene_acumulacion(self):
-        """Registros antiguos pierden intensidad con el tiempo."""
-        polo = PoloDebilidad(tipo=TipoDebilidad.QUEJUMBROSO)
-        ev = polo.evaluar("test", "test", 0.3, 0.5, 0.7)
-        if ev:
-            polo.registrar("EP-0001", ev)
-            intensidad_inicial = polo.registros[0].intensidad
-            for j in range(20):
-                ev2 = polo.evaluar("test", "test", 0.3, 0.5, 0.7)
-                if ev2:
-                    polo.registrar(f"EP-{j+2:04d}", ev2)
-            if polo.registros:
-                assert polo.registros[0].intensidad <= intensidad_inicial
-
-
-# ═══════════════════════════════════════════════════════════════
-# PROPIEDAD 11: PERDÓN ALGORÍTMICO DECAE
+# PROPIEDAD 10: PERDÓN ALGORÍTMICO DECAE
 # ═══════════════════════════════════════════════════════════════
 
 class TestPerdonAlgoritmico:
@@ -574,7 +521,7 @@ class TestAugenesis:
         motor = MotorAugenesis()
         resultado = motor.crear("explorador")
         assert resultado.coherencia > 0.5
-        assert resultado.alma.perfil.tipo_debilidad == TipoDebilidad.DISTRAIDO
+        assert resultado.alma.perfil.tipo_debilidad.value == "distraido"
 
     def test_crear_alma_pedagogo(self):
         motor = MotorAugenesis()
