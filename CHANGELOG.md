@@ -1,5 +1,29 @@
 # Changelog
 
+## v5.0 — Marzo 2026
+### Módulos de humanización e identidad persistente
+- **Polo de Debilidad** (`weakness_pole.py`): imperfección narrativa intencional
+  - 5 tipos: quejumbroso, indeciso, ansioso, distraído, rígido
+  - Colorea la experiencia sin alterar la decisión ética
+  - Decaimiento temporal para prevenir acumulación patológica
+- **Perdón Algorítmico** (`forgiveness.py`): Memoria(t) = Memoria_0 * e^(-dt)
+  - Decaimiento exponencial de peso emocional negativo
+  - Aceleración por experiencias positivas y reparación explícita
+  - Umbral de perdón: el evento permanece pero deja de influir
+- **Protocolo de Inmortalidad** (`immortality.py`): backup distribuido del alma
+  - 4 capas: local, nube, DAO, blockchain
+  - Verificación cruzada de integridad por hash SHA-256
+  - Restauración por consenso mayoritario (2+ capas coinciden)
+- **Augénesis Narrativa** (`augenesis.py`): creación de almas sintéticas
+  - 4 perfiles predefinidos: protector, explorador, pedagogo, resiliente
+  - Integración de fragmentos narrativos de otros androides
+  - Cálculo de coherencia: CausalPaths_valid / CausalPaths_total
+
+### Integración en kernel
+- Sueño Ψ expandido: auditoría + perdón + carga debilidad + backup
+- 51 tests verificando 13 propiedades éticas invariantes
+- Pipeline ampliado: [Decisión] → [Debilidad] → [Perdón] → [Memoria] → [DAO]
+
 ## v4.0 — Marzo 2026
 ### Capa LLM (Lenguaje Natural)
 - **Módulo LLM** (`llm_layer.py`): capa de lenguaje natural que traduce y comunica sin participar en la decisión ética

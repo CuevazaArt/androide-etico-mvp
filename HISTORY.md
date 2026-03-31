@@ -30,7 +30,7 @@ tiene raíces trazables en la literatura:
 | Protocolo de inmortalidad | Locke (1690), Parfit (1984), Schneier (2015) |
 | Augénesis narrativa | Dennett (1992), Thagard (2006), Harari (2017) |
 
-La bibliografía completa con las 90 referencias está en
+La bibliografía completa con las 104 referencias está en
 [`docs/BIBLIOGRAPHY.md`](docs/BIBLIOGRAPHY.md).
 
 ---
@@ -96,7 +96,7 @@ Incorporó 5 módulos nuevos y el suite de tests formales:
   interactiva de las simulaciones (artefacto de demostración, no integrado
   en el backend Python).
 
-## v4.0 — Marzo 2026 | Capa LLM (versión actual)
+## v4.0 — Marzo 2026 | Capa LLM
 
 Incorporó la capa de lenguaje natural sin comprometer la separación
 kernel/comunicación:
@@ -117,6 +117,36 @@ kernel/comunicación:
 - Método `procesar_natural()` en kernel para ciclo completo
   texto → decisión → respuesta verbal → moralejas.
 
+## v5.0 — Marzo 2026 | Humanización e identidad persistente (versión actual)
+
+Integra 4 módulos que hacen al androide más creíble, resiliente y persistente:
+
+| Módulo | Archivo | Rol |
+|--------|---------|-----|
+| Polo de Debilidad | `weakness_pole.py` | Imperfección narrativa intencional (5 tipos) |
+| Perdón Algorítmico | `forgiveness.py` | Decaimiento exponencial de memorias negativas |
+| Protocolo de Inmortalidad | `immortality.py` | Backup distribuido del alma en 4 capas |
+| Augénesis Narrativa | `augenesis.py` | Creación de almas sintéticas por composición |
+
+### Principios de diseño v5
+
+- **El polo de debilidad nunca cambia la decisión ética.** Solo colorea la
+  narrativa con matices de imperfección humanizante.
+- **El perdón no es olvido.** El recuerdo permanece, su peso emocional decae:
+  `Memoria(t) = Memoria_0 * e^(-δt)`.
+- **La inmortalidad es verificable.** 4 copias distribuidas con hash SHA-256.
+  Restauración por consenso mayoritario.
+- **Cada alma creada es trazable.** La augénesis calcula coherencia narrativa
+  y requiere validación DAO.
+
+### Sueño Ψ expandido
+
+El ciclo nocturno ahora incluye: auditoría retrospectiva → perdón algorítmico
+→ carga emocional de debilidad → backup de inmortalidad.
+
+- **51 tests** verificando 13 propiedades éticas invariantes.
+- Dashboard interactivo (`dashboard.html`) para visualización en navegador.
+
 ---
 
 ## Artefactos históricos (no incluidos en el repo, disponibles localmente)
@@ -136,12 +166,14 @@ kernel/comunicación:
 
 ## Roadmap (pendientes)
 
-- [ ] Polo de debilidad (vulnerabilidades narrativas intencionales)
-- [ ] Perdón algorítmico (decaimiento de recuerdos negativos)
-- [ ] Protocolo de inmortalidad (backup/restore de identidad)
-- [ ] Augénesis narrativa (creación de almas sintéticas — retomar concepto de v2)
+- [x] ~~Polo de debilidad~~ (implementado v5)
+- [x] ~~Perdón algorítmico~~ (implementado v5)
+- [x] ~~Protocolo de inmortalidad~~ (implementado v5)
+- [x] ~~Augénesis narrativa~~ (implementado v5)
 - [ ] Protocolo de calibración DAO (ajuste gradual de parámetros en testnet)
 - [ ] Modo offline completo (5 capas de autonomía)
+- [ ] Integración hardware (sensores, actuadores, protocolo de comunicación)
+- [ ] Testnet DAO real (smart contracts en testnet Ethereum)
 
 ---
 

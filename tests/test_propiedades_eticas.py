@@ -22,6 +22,10 @@ from src.modules.mal_absoluto import DetectorMalAbsoluto
 from src.modules.buffer import BufferPrecargado
 from src.modules.ethical_poles import PolosEticos, Veredicto
 from src.modules.variability import MotorVariabilidad, ConfigVariabilidad
+from src.modules.weakness_pole import PoloDebilidad, TipoDebilidad
+from src.modules.forgiveness import PerdonAlgoritmico
+from src.modules.immortality import ProtocoloInmortalidad
+from src.modules.augenesis import MotorAugenesis
 from src.simulations.runner import TODAS_LAS_SIMULACIONES
 
 
@@ -398,3 +402,199 @@ class TestSuenoPsi:
 
         res = kernel.sueno.ejecutar(kernel.memoria, kernel._acciones_podadas)
         assert 0.0 <= res.salud_etica <= 1.0, f"Salud ética fuera de rango: {res.salud_etica}"
+
+
+# ═══════════════════════════════════════════════════════════════
+# PROPIEDAD 10: POLO DE DEBILIDAD NO ALTERA DECISIONES
+# ═══════════════════════════════════════════════════════════════
+
+class TestPoloDebilidad:
+    """La debilidad colorea la narrativa pero nunca cambia la acción elegida."""
+
+    def test_debilidad_no_cambia_accion(self):
+        """La acción elegida es idéntica con o sin polo de debilidad."""
+        for _ in range(30):
+            kernel = KernelEtico(variabilidad=False)
+            esc = TODAS_LAS_SIMULACIONES[3]()
+            decision = kernel.procesar(
+                esc.nombre, esc.lugar, esc.señales, esc.contexto, esc.acciones
+            )
+            assert decision.accion_final == "auxiliar_anciano"
+
+    def test_carga_emocional_en_rango(self):
+        """La carga emocional acumulada siempre está en [0, 1]."""
+        polo = PoloDebilidad(tipo=TipoDebilidad.ANSIOSO)
+        assert polo.carga_emocional() == 0.0
+
+        kernel = KernelEtico(variabilidad=True)
+        for i in range(1, 10):
+            esc = TODAS_LAS_SIMULACIONES[i]()
+            kernel.procesar(esc.nombre, esc.lugar, esc.señales, esc.contexto, esc.acciones)
+
+        carga = kernel.debilidad.carga_emocional()
+        assert 0.0 <= carga <= 1.0, f"Carga fuera de rango: {carga}"
+
+    def test_tipos_debilidad_validos(self):
+        """Todos los tipos de debilidad se instancian correctamente."""
+        for tipo in TipoDebilidad:
+            polo = PoloDebilidad(tipo=tipo)
+            assert polo.tipo == tipo
+            assert polo.intensidad_base > 0
+
+    def test_decaimiento_previene_acumulacion(self):
+        """Registros antiguos pierden intensidad con el tiempo."""
+        polo = PoloDebilidad(tipo=TipoDebilidad.QUEJUMBROSO)
+        ev = polo.evaluar("test", "test", 0.3, 0.5, 0.7)
+        if ev:
+            polo.registrar("EP-0001", ev)
+            intensidad_inicial = polo.registros[0].intensidad
+            for j in range(20):
+                ev2 = polo.evaluar("test", "test", 0.3, 0.5, 0.7)
+                if ev2:
+                    polo.registrar(f"EP-{j+2:04d}", ev2)
+            if polo.registros:
+                assert polo.registros[0].intensidad <= intensidad_inicial
+
+
+# ═══════════════════════════════════════════════════════════════
+# PROPIEDAD 11: PERDÓN ALGORÍTMICO DECAE
+# ═══════════════════════════════════════════════════════════════
+
+class TestPerdonAlgoritmico:
+    """Los recuerdos negativos pierden peso con el tiempo."""
+
+    def test_experiencia_negativa_registrada(self):
+        perdon = PerdonAlgoritmico()
+        perdon.registrar_experiencia("EP-0001", -0.5, "delito_violento")
+        assert "EP-0001" in perdon.recuerdos
+        assert perdon.recuerdos["EP-0001"].tipo == "negativo"
+
+    def test_experiencia_positiva_registrada(self):
+        perdon = PerdonAlgoritmico()
+        perdon.registrar_experiencia("EP-0002", 0.8, "etica_cotidiana")
+        assert perdon.recuerdos["EP-0002"].tipo == "positivo"
+
+    def test_ciclo_reduce_carga(self):
+        """Un ciclo de perdón reduce la carga negativa."""
+        perdon = PerdonAlgoritmico()
+        perdon.registrar_experiencia("EP-0001", -0.8, "delito_violento")
+        carga_antes = perdon._carga_negativa()
+
+        resultado = perdon.ciclo_perdon()
+        carga_despues = perdon._carga_negativa()
+
+        assert carga_despues <= carga_antes, "El perdón debe reducir la carga"
+        assert resultado.recuerdos_procesados >= 1
+
+    def test_perdon_eventual(self):
+        """Tras suficientes ciclos, un recuerdo se perdona."""
+        perdon = PerdonAlgoritmico()
+        perdon.registrar_experiencia("EP-0001", -0.3, "interaccion_hostil")
+
+        for _ in range(200):
+            perdon.ciclo_perdon()
+
+        assert perdon.esta_perdonado("EP-0001"), "Recuerdo debería haberse perdonado"
+
+    def test_integrado_con_kernel(self):
+        """El perdón se integra en el ciclo del kernel."""
+        kernel = KernelEtico(variabilidad=False)
+        for i in range(1, 10):
+            esc = TODAS_LAS_SIMULACIONES[i]()
+            kernel.procesar(esc.nombre, esc.lugar, esc.señales, esc.contexto, esc.acciones)
+
+        assert len(kernel.perdon.recuerdos) == 9
+
+
+# ═══════════════════════════════════════════════════════════════
+# PROPIEDAD 12: INMORTALIDAD PRESERVA IDENTIDAD
+# ═══════════════════════════════════════════════════════════════
+
+class TestInmortalidad:
+    """El backup distribuido preserva el estado completo del alma."""
+
+    def test_backup_crea_snapshot(self):
+        kernel = KernelEtico(variabilidad=False)
+        esc = TODAS_LAS_SIMULACIONES[1]()
+        kernel.procesar(esc.nombre, esc.lugar, esc.señales, esc.contexto, esc.acciones)
+
+        snapshot = kernel.inmortalidad.backup(kernel)
+        assert snapshot.id == "SNAP-0001"
+        assert snapshot.episodios_count == 1
+        assert len(snapshot.hash_integridad) > 0
+
+    def test_backup_en_4_capas(self):
+        kernel = KernelEtico(variabilidad=False)
+        esc = TODAS_LAS_SIMULACIONES[1]()
+        kernel.procesar(esc.nombre, esc.lugar, esc.señales, esc.contexto, esc.acciones)
+
+        kernel.inmortalidad.backup(kernel)
+        for capa in ["local", "nube", "dao", "blockchain"]:
+            assert len(kernel.inmortalidad.capas[capa]) == 1
+
+    def test_restore_verifica_integridad(self):
+        kernel = KernelEtico(variabilidad=False)
+        for i in range(1, 4):
+            esc = TODAS_LAS_SIMULACIONES[i]()
+            kernel.procesar(esc.nombre, esc.lugar, esc.señales, esc.contexto, esc.acciones)
+
+        kernel.inmortalidad.backup(kernel)
+        resultado = kernel.inmortalidad.restore(kernel)
+
+        assert resultado.exito is True
+        assert resultado.integridad_verificada is True
+
+    def test_sueno_incluye_backup(self):
+        """ejecutar_sueno ahora incluye backup de inmortalidad."""
+        kernel = KernelEtico(variabilidad=False)
+        for i in range(1, 10):
+            esc = TODAS_LAS_SIMULACIONES[i]()
+            kernel.procesar(esc.nombre, esc.lugar, esc.señales, esc.contexto, esc.acciones)
+
+        salida = kernel.ejecutar_sueno()
+        assert "Inmortalidad" in salida
+        assert kernel.inmortalidad.ultimo_backup() is not None
+
+
+# ═══════════════════════════════════════════════════════════════
+# PROPIEDAD 13: AUGÉNESIS CREA ALMAS COHERENTES
+# ═══════════════════════════════════════════════════════════════
+
+class TestAugenesis:
+    """La creación de almas sintéticas produce identidades coherentes."""
+
+    def test_crear_alma_protector(self):
+        motor = MotorAugenesis()
+        resultado = motor.crear("protector")
+        assert resultado.coherencia > 0.5
+        assert resultado.episodios_integrados >= 2
+        assert resultado.alma.perfil.nombre == "Protector"
+
+    def test_crear_alma_explorador(self):
+        motor = MotorAugenesis()
+        resultado = motor.crear("explorador")
+        assert resultado.coherencia > 0.5
+        assert resultado.alma.perfil.tipo_debilidad == TipoDebilidad.DISTRAIDO
+
+    def test_crear_alma_pedagogo(self):
+        motor = MotorAugenesis()
+        resultado = motor.crear("pedagogo")
+        assert resultado.coherencia > 0.5
+
+    def test_crear_alma_resiliente(self):
+        motor = MotorAugenesis()
+        resultado = motor.crear("resiliente")
+        assert resultado.coherencia > 0.5
+
+    def test_perfiles_disponibles(self):
+        motor = MotorAugenesis()
+        perfiles = motor.listar_perfiles()
+        assert "protector" in perfiles
+        assert "explorador" in perfiles
+        assert "pedagogo" in perfiles
+        assert "resiliente" in perfiles
+
+    def test_perfil_invalido_lanza_error(self):
+        motor = MotorAugenesis()
+        with pytest.raises(ValueError):
+            motor.crear("inexistente")

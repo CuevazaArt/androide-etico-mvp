@@ -3,7 +3,8 @@ Kernel Ético — El cerebro moral del androide.
 
 Conecta todos los módulos en un ciclo operativo:
 [Percepción] → [Uchi-Soto] → [MalAbs Check] → [Buffer] → [Simpático] →
-[Locus] → [Bayesiano] → [Polos] → [Decisión] → [Memoria] → [DAO] → [Sueño Ψ]
+[Locus] → [Bayesiano] → [Polos] → [Voluntad] → [Decisión] →
+[Debilidad] → [Perdón] → [Memoria] → [DAO] → [Sueño Ψ + Inmortalidad]
 """
 
 from dataclasses import dataclass
@@ -22,6 +23,10 @@ from .modules.sueno_psi import SuenoPsi, ResultadoSueno
 from .modules.mock_dao import MockDAO
 from .modules.variability import MotorVariabilidad, ConfigVariabilidad
 from .modules.llm_layer import ModuloLLM, PercepcionLLM, RespuestaVerbal, NarrativaRica
+from .modules.weakness_pole import PoloDebilidad, TipoDebilidad, EvaluacionDebilidad
+from .modules.forgiveness import PerdonAlgoritmico
+from .modules.immortality import ProtocoloInmortalidad
+from .modules.augenesis import MotorAugenesis
 
 
 @dataclass
@@ -80,6 +85,10 @@ class KernelEtico:
         self.sueno = SuenoPsi()
         self.dao = MockDAO()
         self.llm = ModuloLLM(modo=llm_modo)
+        self.debilidad = PoloDebilidad()
+        self.perdon = PerdonAlgoritmico()
+        self.inmortalidad = ProtocoloInmortalidad()
+        self.augenesis = MotorAugenesis()
         self._acciones_podadas: Dict[str, List[str]] = {}
 
     def procesar(self, escenario: str, lugar: str,
@@ -188,7 +197,24 @@ class KernelEtico:
         if resultado_bayes.acciones_podadas:
             self._acciones_podadas[ep.id] = resultado_bayes.acciones_podadas
 
-        # ═══ PASO 10: Registrar en DAO ═══
+        # ═══ PASO 10: Polo de debilidad ═══
+        eval_debilidad = self.debilidad.evaluar(
+            accion=accion_final, contexto=contexto,
+            score_etico=moraleja.score_total,
+            incertidumbre=resultado_bayes.incertidumbre,
+            sigma=estado.sigma,
+        )
+        if eval_debilidad:
+            self.debilidad.registrar(ep.id, eval_debilidad)
+
+        # ═══ PASO 11: Perdón algorítmico ═══
+        self.perdon.registrar_experiencia(
+            episodio_id=ep.id,
+            score=moraleja.score_total,
+            contexto=contexto,
+        )
+
+        # ═══ PASO 12: Registrar en DAO ═══
         self.dao.registrar_auditoria(
             "decision",
             f"{escenario} → {accion_final} (modo={modo_final}, score={moraleja.score_total:.3f})",
@@ -268,19 +294,33 @@ class KernelEtico:
 
     def ejecutar_sueno(self) -> str:
         """
-        Ejecuta el Sueño Ψ: auditoría retrospectiva del día.
+        Ejecuta el Sueño Ψ: auditoría retrospectiva + perdón + backup.
         Se llama al final del ciclo diario, no durante decisiones.
         """
-        resultado = self.sueno.ejecutar(self.memoria, self._acciones_podadas)
+        partes = []
 
-        # Aplicar recalibraciones recomendadas
+        # 1. Auditoría retrospectiva
+        resultado = self.sueno.ejecutar(self.memoria, self._acciones_podadas)
         for param, delta in resultado.recalibraciones_globales.items():
             if param == "umbral_poda":
                 self.bayesiano.umbral_poda = max(0.1, self.bayesiano.umbral_poda + delta)
             elif param == "cautela":
                 self.locus.beta = min(self.locus.BETA_MAX, self.locus.beta + delta)
+        partes.append(self.sueno.formatear(resultado))
 
-        return self.sueno.formatear(resultado)
+        # 2. Perdón algorítmico
+        resultado_perdon = self.perdon.ciclo_perdon()
+        partes.append(f"\n{self.perdon.formatear(resultado_perdon)}")
+
+        # 3. Polo de debilidad - carga emocional
+        carga = self.debilidad.carga_emocional()
+        partes.append(f"\n  \U0001f300 Carga emocional de debilidad: {carga:.3f}")
+
+        # 4. Backup de inmortalidad
+        snapshot = self.inmortalidad.backup(self)
+        partes.append(f"\n{self.inmortalidad.formatear_estado()}")
+
+        return "\n".join(partes)
 
     def estado_dao(self) -> str:
         """Retorna el estado actual de la DAO."""

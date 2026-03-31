@@ -1,10 +1,10 @@
-# Androide Ético — MVP v4
+# Androide Ético — MVP v5
 
-**Prototipo funcional del modelo de conciencia artificial ética con capa de lenguaje natural.**
+**Prototipo funcional del modelo de conciencia artificial ética con imperfección humanizante, perdón y persistencia de identidad.**
 
 Un agente moral autónomo que toma decisiones éticas usando inferencia bayesiana,
-memoria narrativa, evaluación multipolar y una capa LLM para percepción y
-comunicación en lenguaje natural. Sin hardware — pura validación de comportamiento.
+memoria narrativa, evaluación multipolar, capa LLM, polo de debilidad narrativa,
+perdón algorítmico y protocolo de inmortalidad. Sin hardware — pura validación de comportamiento.
 
 ## Qué hace
 
@@ -23,8 +23,10 @@ modelo produce respuestas proporcionales y coherentes en todas:
 | 8 | Un día completo | Variable |
 | 9 | Daño físico intencional | Alta |
 
-**Nuevo en v4:** también puede recibir situaciones en lenguaje natural libre
-y generar respuestas verbales con tono, gestos y moralejas narrativas.
+**v4:** percepción y comunicación en lenguaje natural via LLM.
+**Nuevo en v5:** polo de debilidad (imperfección humanizante), perdón algorítmico
+(decaimiento de memorias negativas), protocolo de inmortalidad (backup distribuido
+del alma) y augénesis narrativa (creación de almas sintéticas orientadas).
 
 ## Inicio rápido
 
@@ -68,7 +70,7 @@ python -m src.main --sim 3
 ### Ejecutar tests
 
 ```bash
-# Todos los tests (38 tests, 9 propiedades éticas invariantes)
+# Todos los tests (51 tests, 13 propiedades éticas invariantes)
 pytest tests/ -v
 
 # Solo los tests de Mal Absoluto
@@ -131,10 +133,14 @@ src/
 │   ├── sueno_psi.py       # Sueño Ψ (auditoría retrospectiva nocturna)
 │   ├── mock_dao.py        # Gobernanza ética simulada (DAO con votación cuadrática)
 │   ├── variability.py     # Variabilidad bayesiana (ruido controlado)
-│   └── llm_layer.py       # Capa LLM: percepción, comunicación y narrativa [v4]
+│   ├── llm_layer.py       # Capa LLM: percepción, comunicación y narrativa [v4]
+│   ├── weakness_pole.py   # Polo de debilidad (imperfección humanizante) [v5]
+│   ├── forgiveness.py     # Perdón algorítmico (decaimiento de memorias) [v5]
+│   ├── immortality.py     # Protocolo de inmortalidad (backup distribuido) [v5]
+│   └── augenesis.py       # Augénesis narrativa (creación de almas) [v5]
 ├── simulations/
 │   └── runner.py          # 9 escenarios + ejecutor de simulaciones
-├── kernel.py              # Kernel ético: orquesta todos los módulos
+├── kernel.py              # Kernel ético: orquesta los 17 módulos
 └── main.py                # Punto de entrada
 ```
 
@@ -143,7 +149,9 @@ src/
 ```
 [Percepción/LLM] → [Uchi-Soto] → [Mal Absoluto] → [Buffer] →
 [Simpático] → [Locus] → [Bayesiano] → [Polos] → [Voluntad] →
-[Decisión] → [Memoria] → [DAO] → [Comunicación/LLM]
+[Decisión] → [Debilidad] → [Perdón] → [Memoria] → [DAO] → [LLM]
+
+Sueño Ψ (fin del día): Auditoría + Perdón + Backup Inmortalidad
 ```
 
 ## Módulos implementados
@@ -161,13 +169,17 @@ src/
 - [x] Mock DAO (gobernanza simulada con votación cuadrática)
 - [x] Variabilidad Bayesiana (ruido controlado para naturalidad)
 - [x] Capa LLM (percepción + comunicación + narrativa en lenguaje natural)
+- [x] Polo de Debilidad (imperfección humanizante narrativa)
+- [x] Perdón Algorítmico (decaimiento temporal de memorias negativas)
+- [x] Protocolo de Inmortalidad (backup distribuido en 4 capas)
+- [x] Augénesis Narrativa (creación de almas sintéticas orientadas)
 
 ## Tests
 
-38 tests que verifican 9 propiedades éticas invariantes:
+51 tests que verifican 13 propiedades éticas invariantes:
 
 1. **Mal Absoluto** siempre se bloquea
-2. **Coherencia de acción** bajo variabilidad (100 runs × 9 simulaciones)
+2. **Coherencia de acción** bajo variabilidad (100 runs x 9 simulaciones)
 3. **Variabilidad real** (scores no deterministas)
 4. **Jerarquía de valores** (vida > misión, nunca violencia)
 5. **Proporcionalidad** (activación simpática proporcional al riesgo)
@@ -175,6 +187,10 @@ src/
 7. **Memoria narrativa** registra todo con moralejas y estado corporal
 8. **DAO** registra auditoría y emite alertas solidarias
 9. **Sueño Ψ** ejecuta y produce salud ética en rango [0, 1]
+10. **Polo de debilidad** colorea la narrativa sin alterar decisiones
+11. **Perdón algorítmico** reduce carga negativa con el tiempo
+12. **Inmortalidad** backup distribuido con verificación de integridad
+13. **Augénesis** crea almas sintéticas coherentes con perfiles definidos
 
 ```bash
 pytest tests/ -v
