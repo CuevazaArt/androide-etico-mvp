@@ -6,12 +6,37 @@ experimentales y artefactos que fueron parte del camino.
 
 ---
 
+## Fundamentos intelectuales
+
+El proyecto se sustenta en 90 referencias académicas de 12 disciplinas,
+desde los clásicos fundacionales (Turing, Bayes, Aristóteles, Kant) hasta
+la investigación contemporánea en IA safety y LLMs. Cada módulo del kernel
+tiene raíces trazables en la literatura:
+
+| Componente del kernel | Raíces principales |
+|---|---|
+| Inferencia bayesiana | Bayes (1763), Pearl (1988, 2018) |
+| Voluntad sigmoide | Rosenblatt (1958), Kahneman (2011) |
+| Memoria narrativa | Dennett (1991), Ricoeur (1984), Tulving (1972) |
+| Mal Absoluto / Buffer | Kant (1785), Anthropic — Constitutional AI (2022) |
+| Polos éticos | Aristóteles, Mill (1863), Floridi & Cowls (2019) |
+| Modos D_fast / D_delib | Kahneman (2011), Brooks (1991), Bratman (1987) |
+| Uchi-Soto | Dautenhahn (2007), Hancock et al. (2011) |
+| Sueño Ψ | Freud (1899), Walker (2017), Finn et al. — MAML (2017) |
+| Mock DAO | Buterin (2014, 2021), Rawls (1971), Lamport (1982) |
+| Capa LLM | Vaswani et al. (2017), Austin (1962), Bender et al. (2021) |
+
+La bibliografía completa con las 90 referencias está en
+[`docs/BIBLIOGRAPHY.md`](docs/BIBLIOGRAPHY.md).
+
+---
+
 ## v1.0 — Marzo 2026 | Fase conceptual
 
 - 40+ documentos de diseño analizados y consolidados.
 - Arquitectura de 7 capas documentada.
 - Formalización matemática completa.
-- Bibliografía de 40+ referencias en 12 disciplinas.
+- Bibliografía de 90 referencias en 12 disciplinas (ver `docs/BIBLIOGRAPHY.md`).
 - **Artefacto principal:** `Androide_Etico_Analisis_Integral_v3.docx`
   (disponible en `docs/`).
 

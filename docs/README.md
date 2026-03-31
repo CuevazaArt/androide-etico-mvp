@@ -7,6 +7,8 @@ Este directorio contiene la documentación técnica y conceptual del proyecto.
 - `Androide_Etico_Analisis_Integral_v3.docx` — Documento completo del modelo
   con notas explicativas, críticas, simulaciones y evaluación de viabilidad.
   Basado en el análisis de 40+ documentos del acervo del proyecto.
+- `BIBLIOGRAPHY.md` — Bibliografía académica: 90 referencias en 12
+  disciplinas, organizadas por área con mapeo componente-a-referencia.
 
 ## Versión actual: v4.0 (Marzo 2026)
 
