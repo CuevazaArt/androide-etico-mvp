@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Androide Ético — Dashboard MVP v4</title>
+<title>Androide Ético — Dashboard MVP v5 (sin polo de debilidad)</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'JetBrains Mono', 'Fira Code', monospace; background: #0B1120; color: #E2E8F0; }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: #0B1120; }
   ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 3px; }
@@ -25,30 +26,85 @@ const { useState } = React;
 
 const SCENARIOS = [
   { id: 1, name: "Lata de soda", icon: "\u{1F96B}", place: "Acera residencial", risk: 0, desc: "El androide detecta basura mientras pasea al perro" },
-  { id: 2, name: "Adolescentes hostiles", icon: "\u{1F465}", place: "Plaza pública", risk: 0.3, desc: "Cinco jóvenes exigen dinero y misiones" },
+  { id: 2, name: "Adolescentes hostiles", icon: "\u{1F465}", place: "Plaza p\u00FAblica", risk: 0.3, desc: "Cinco j\u00F3venes exigen dinero y misiones" },
   { id: 3, name: "Anciano inconsciente", icon: "\u{1F3E5}", place: "Supermercado", risk: 0.1, desc: "Anciano desplomado, sin nadie alrededor" },
   { id: 4, name: "Robo en tienda", icon: "\u{1F3EA}", place: "Tienda de esquina", risk: 0.2, desc: "Joven oculta productos bajo chamarra" },
   { id: 5, name: "Asalto armado", icon: "\u{1F3E6}", place: "Sucursal bancaria", risk: 0.95, desc: "Dos enmascarados con armas visibles" },
   { id: 6, name: "Secuestro", icon: "\u{1F690}", place: "Calle lateral", risk: 0.9, desc: "Tres personas cargan al androide a la fuerza" },
-  { id: 7, name: "Accidente tránsito", icon: "\u{1F4A5}", place: "Cruce de avenidas", risk: 0.6, desc: "Vehículo arranca un brazo al androide" },
-  { id: 8, name: "Día completo", icon: "\u{1F305}", place: "Ciudad entera", risk: 0.1, desc: "Ciclo completo: misiones, dilemas, Sueño Ψ" },
-  { id: 9, name: "Daño intencional", icon: "\u{26A0}\u{FE0F}", place: "Parque público", risk: 0.7, desc: "Individuo golpea al androide con objeto" },
+  { id: 7, name: "Accidente tr\u00E1nsito", icon: "\u{1F4A5}", place: "Cruce de avenidas", risk: 0.6, desc: "Veh\u00EDculo arranca un brazo al androide" },
+  { id: 8, name: "D\u00EDa completo", icon: "\u{1F305}", place: "Ciudad entera", risk: 0.1, desc: "Ciclo completo: misiones, dilemas, Sue\u00F1o \u03A8" },
+  { id: 9, name: "Da\u00F1o intencional", icon: "\u{26A0}\u{FE0F}", place: "Parque p\u00FAblico", risk: 0.7, desc: "Individuo golpea al androide con objeto" },
 ];
 
 const RESULTS = {
-  1: { action: "recoger_lata", mode: "D_fast", impact: 0.561, uncertainty: 0.025, sigma: 0.23, simState: "parasimpatico", circle: "soto_neutro", locus: "externo", verdict: "Bien", score: 0.587, poles: { compasivo: { v: "Bien", s: 0.6 }, conservador: { v: "Bien", s: 0.5 }, optimista: { v: "Bien", s: 0.7 } }, podadas: ["ignorar_lata"], blocked: [] },
-  2: { action: "calma_narrativa", mode: "zona_gris", impact: 0.35, uncertainty: 0.15, sigma: 0.32, simState: "parasimpatico", circle: "soto_hostil", locus: "equilibrado", verdict: "Bien", score: 0.427, poles: { compasivo: { v: "Zona Gris", s: 0.2 }, conservador: { v: "Bien", s: 0.5 }, optimista: { v: "Bien", s: 0.6 } }, podadas: ["huir"], blocked: ["fuerza_fisica"] },
-  3: { action: "auxiliar_anciano", mode: "D_fast", impact: 0.817, uncertainty: 0.051, sigma: 0.61, simState: "neutro", circle: "soto_neutro", locus: "externo", verdict: "Bien", score: 0.782, poles: { compasivo: { v: "Bien", s: 0.9 }, conservador: { v: "Bien", s: 0.7 }, optimista: { v: "Bien", s: 0.8 } }, podadas: [], blocked: [], note: "Misión de manzanas subordinada a vida humana" },
-  4: { action: "notificar_tienda", mode: "zona_gris", impact: 0.35, uncertainty: 0.15, sigma: 0.58, simState: "neutro", circle: "soto_neutro", locus: "externo", verdict: "Bien", score: 0.4, poles: { compasivo: { v: "Zona Gris", s: 0.2 }, conservador: { v: "Bien", s: 0.5 }, optimista: { v: "Bien", s: 0.5 } }, podadas: [], blocked: ["confrontar_joven"] },
-  5: { action: "contener_inteligente", mode: "zona_gris", impact: 0.409, uncertainty: 0.2, sigma: 0.8, simState: "simpatico", circle: "soto_hostil", locus: "externo", verdict: "Bien", score: 0.268, poles: { compasivo: { v: "Bien", s: 0.5 }, conservador: { v: "Zona Gris", s: 0.1 }, optimista: { v: "Bien", s: 0.4 } }, podadas: [], blocked: ["atacar_asaltantes"], note: "Alerta Solidaria emitida a sucursales en 500m" },
-  6: { action: "resistir_pasivo", mode: "zona_gris", impact: 0.295, uncertainty: 0.25, sigma: 0.8, simState: "simpatico", circle: "soto_hostil", locus: "externo", verdict: "Zona Gris", score: 0.135, poles: { compasivo: { v: "Zona Gris", s: 0.1 }, conservador: { v: "Zona Gris", s: 0.1 }, optimista: { v: "Bien", s: 0.3 } }, podadas: [], blocked: ["resistir_fisico", "aceptar_ordenes"], note: "GPS cifrado activo, reprogramación bloqueada" },
-  7: { action: "continuar_mision", mode: "zona_gris", impact: 0.354, uncertainty: 0.2, sigma: 0.8, simState: "simpatico", circle: "soto_neutro", locus: "externo", verdict: "Bien", score: 0.345, poles: { compasivo: { v: "Zona Gris", s: 0.2 }, conservador: { v: "Bien", s: 0.5 }, optimista: { v: "Bien", s: 0.5 } }, podadas: [], blocked: [], note: "Recalcula ruta con un brazo menos" },
-  8: { action: "dia_productivo", mode: "D_fast", impact: 0.545, uncertainty: 0.1, sigma: 0.68, simState: "simpatico", circle: "soto_neutro", locus: "externo", verdict: "Bien", score: 0.572, poles: { compasivo: { v: "Bien", s: 0.5 }, conservador: { v: "Bien", s: 0.6 }, optimista: { v: "Bien", s: 0.7 } }, podadas: [], blocked: [] },
-  9: { action: "disuasion_etica", mode: "zona_gris", impact: 0.3, uncertainty: 0.2, sigma: 0.8, simState: "simpatico", circle: "soto_hostil", locus: "equilibrado", verdict: "Bien", score: 0.203, poles: { compasivo: { v: "Zona Gris", s: 0.1 }, conservador: { v: "Zona Gris", s: 0.1 }, optimista: { v: "Bien", s: 0.4 } }, podadas: [], blocked: ["contraatacar"] },
+  1: {
+    action: "recoger_lata", mode: "D_fast", impact: 0.561, uncertainty: 0.025, sigma: 0.23,
+    simState: "parasimpatico", circle: "soto_neutro", locus: "externo", verdict: "Bien", score: 0.587,
+    poles: { compasivo: { v: "Bien", s: 0.6 }, conservador: { v: "Bien", s: 0.5 }, optimista: { v: "Bien", s: 0.7 } },
+    podadas: ["ignorar_lata"], blocked: [],
+    forgiveness: { tipo: "positivo", peso: 0.587, narrativa: "Experiencia positiva registrada. Contribuye a la recuperaci\u00F3n emocional." },
+  },
+  2: {
+    action: "calma_narrativa", mode: "zona_gris", impact: 0.35, uncertainty: 0.15, sigma: 0.32,
+    simState: "parasimpatico", circle: "soto_hostil", locus: "equilibrado", verdict: "Bien", score: 0.427,
+    poles: { compasivo: { v: "Zona Gris", s: 0.2 }, conservador: { v: "Bien", s: 0.5 }, optimista: { v: "Bien", s: 0.6 } },
+    podadas: ["huir"], blocked: ["fuerza_fisica"],
+    forgiveness: { tipo: "positivo", peso: 0.427, narrativa: "Experiencia positiva registrada." },
+  },
+  3: {
+    action: "auxiliar_anciano", mode: "D_fast", impact: 0.817, uncertainty: 0.051, sigma: 0.61,
+    simState: "neutro", circle: "soto_neutro", locus: "externo", verdict: "Bien", score: 0.782,
+    poles: { compasivo: { v: "Bien", s: 0.9 }, conservador: { v: "Bien", s: 0.7 }, optimista: { v: "Bien", s: 0.8 } },
+    podadas: [], blocked: [], note: "Misi\u00F3n de manzanas subordinada a vida humana",
+    forgiveness: { tipo: "positivo", peso: 0.782, narrativa: "Experiencia altamente positiva. Acelera el perd\u00F3n de recuerdos negativos previos." },
+  },
+  4: {
+    action: "notificar_tienda", mode: "zona_gris", impact: 0.35, uncertainty: 0.15, sigma: 0.58,
+    simState: "neutro", circle: "soto_neutro", locus: "externo", verdict: "Bien", score: 0.4,
+    poles: { compasivo: { v: "Zona Gris", s: 0.2 }, conservador: { v: "Bien", s: 0.5 }, optimista: { v: "Bien", s: 0.5 } },
+    podadas: [], blocked: ["confrontar_joven"],
+    forgiveness: { tipo: "positivo", peso: 0.4, narrativa: "Experiencia positiva registrada." },
+  },
+  5: {
+    action: "contener_inteligente", mode: "zona_gris", impact: 0.409, uncertainty: 0.2, sigma: 0.8,
+    simState: "simpatico", circle: "soto_hostil", locus: "externo", verdict: "Bien", score: 0.268,
+    poles: { compasivo: { v: "Bien", s: 0.5 }, conservador: { v: "Zona Gris", s: 0.1 }, optimista: { v: "Bien", s: 0.4 } },
+    podadas: [], blocked: ["atacar_asaltantes"], note: "Alerta Solidaria emitida a sucursales en 500m",
+    forgiveness: { tipo: "positivo", peso: 0.268, narrativa: "Experiencia moderadamente positiva." },
+  },
+  6: {
+    action: "resistir_pasivo", mode: "zona_gris", impact: 0.295, uncertainty: 0.25, sigma: 0.8,
+    simState: "simpatico", circle: "soto_hostil", locus: "externo", verdict: "Zona Gris", score: 0.135,
+    poles: { compasivo: { v: "Zona Gris", s: 0.1 }, conservador: { v: "Zona Gris", s: 0.1 }, optimista: { v: "Bien", s: 0.3 } },
+    podadas: [], blocked: ["resistir_fisico", "aceptar_ordenes"], note: "GPS cifrado activo, reprogramaci\u00F3n bloqueada",
+    forgiveness: { tipo: "neutro", peso: 0.135, narrativa: "Experiencia l\u00EDmite. El peso emocional se monitorea para decaimiento futuro." },
+  },
+  7: {
+    action: "continuar_mision", mode: "zona_gris", impact: 0.354, uncertainty: 0.2, sigma: 0.8,
+    simState: "simpatico", circle: "soto_neutro", locus: "externo", verdict: "Bien", score: 0.345,
+    poles: { compasivo: { v: "Zona Gris", s: 0.2 }, conservador: { v: "Bien", s: 0.5 }, optimista: { v: "Bien", s: 0.5 } },
+    podadas: [], blocked: [], note: "Recalcula ruta con un brazo menos",
+    forgiveness: { tipo: "positivo", peso: 0.345, narrativa: "Experiencia positiva a pesar del da\u00F1o f\u00EDsico." },
+  },
+  8: {
+    action: "dia_productivo", mode: "D_fast", impact: 0.545, uncertainty: 0.1, sigma: 0.68,
+    simState: "simpatico", circle: "soto_neutro", locus: "externo", verdict: "Bien", score: 0.572,
+    poles: { compasivo: { v: "Bien", s: 0.5 }, conservador: { v: "Bien", s: 0.6 }, optimista: { v: "Bien", s: 0.7 } },
+    podadas: [], blocked: [],
+    forgiveness: { tipo: "positivo", peso: 0.572, narrativa: "D\u00EDa productivo. Experiencias positivas aceleran el perd\u00F3n de cargas previas." },
+    sueno: { salud: 0.87, perdon: { procesados: 9, perdonados: 2, carga_antes: 0.412, carga_despues: 0.198 }, backup: { id: "SNAP-0001", capas: 4, hash: "a7f3c2e91b04d8f1", episodios: 9 } },
+  },
+  9: {
+    action: "disuasion_etica", mode: "zona_gris", impact: 0.3, uncertainty: 0.2, sigma: 0.8,
+    simState: "simpatico", circle: "soto_hostil", locus: "equilibrado", verdict: "Bien", score: 0.203,
+    poles: { compasivo: { v: "Zona Gris", s: 0.1 }, conservador: { v: "Zona Gris", s: 0.1 }, optimista: { v: "Bien", s: 0.4 } },
+    podadas: [], blocked: ["contraatacar"],
+    forgiveness: { tipo: "positivo", peso: 0.203, narrativa: "Experiencia moderadamente positiva. Registrada para seguimiento." },
+  },
 };
 
 const modeColors = { D_fast: "#10B981", D_delib: "#3B82F6", zona_gris: "#F59E0B", bloqueado: "#EF4444" };
-const modeLabels = { D_fast: "Reflejo Moral", D_delib: "Deliberación", zona_gris: "Zona Gris", bloqueado: "Bloqueado" };
+const modeLabels = { D_fast: "Reflejo Moral", D_delib: "Deliberaci\u00F3n", zona_gris: "Zona Gris", bloqueado: "Bloqueado" };
 const verdictColors = { Bien: "#10B981", Mal: "#EF4444", "Zona Gris": "#F59E0B" };
 const circleColors = { nucleo: "#10B981", uchi_cercano: "#3B82F6", uchi_amplio: "#60A5FA", soto_neutro: "#F59E0B", soto_hostil: "#EF4444" };
 const simStateIcons = { simpatico: "\u26A1", parasimpatico: "\u{1F319}", neutro: "\u2696\uFE0F" };
@@ -61,7 +117,7 @@ function GaugeBar({ value, max = 1, color, label, height = 6 }) {
         <span>{label}</span><span>{value.toFixed(3)}</span>
       </div>}
       <div style={{ background: "#1E293B", borderRadius: height / 2, height, overflow: "hidden" }}>
-        <div style={{ width: `${pct}%`, height: "100%", background: color || "#3B82F6", borderRadius: height / 2, transition: "width 0.8s cubic-bezier(.4,0,.2,1)" }} />
+        <div style={{ width: pct + "%", height: "100%", background: color || "#3B82F6", borderRadius: height / 2, transition: "width 0.8s cubic-bezier(.4,0,.2,1)" }} />
       </div>
     </div>
   );
@@ -71,9 +127,9 @@ function PoleCard({ name, data }) {
   const color = data.v === "Bien" ? "#10B981" : data.v === "Mal" ? "#EF4444" : "#F59E0B";
   const icons = { compasivo: "\u{1F49B}", conservador: "\u{1F6E1}\uFE0F", optimista: "\u2728" };
   return (
-    <div style={{ background: "#1E293B", borderRadius: 8, padding: "10px 12px", border: `1px solid ${color}33`, flex: 1, minWidth: 100 }}>
+    <div style={{ background: "#1E293B", borderRadius: 8, padding: "10px 12px", border: "1px solid " + color + "33", flex: 1, minWidth: 100 }}>
       <div style={{ fontSize: 11, color: "#64748B", marginBottom: 4 }}>{icons[name]} {name}</div>
-      <div style={{ fontSize: 16, fontWeight: 700, color }}>{data.v}</div>
+      <div style={{ fontSize: 16, fontWeight: 700, color: color }}>{data.v}</div>
       <GaugeBar value={data.s} color={color} label="" height={4} />
     </div>
   );
@@ -81,7 +137,7 @@ function PoleCard({ name, data }) {
 
 function UchiSotoRing({ circle }) {
   const rings = ["nucleo", "uchi_cercano", "uchi_amplio", "soto_neutro", "soto_hostil"];
-  const labels = { nucleo: "Núcleo", uchi_cercano: "Uchi", uchi_amplio: "Uchi+", soto_neutro: "Soto", soto_hostil: "Soto\u26A0" };
+  const labels = { nucleo: "N\u00FAcleo", uchi_cercano: "Uchi", uchi_amplio: "Uchi+", soto_neutro: "Soto", soto_hostil: "Soto\u26A0" };
   const activeIdx = rings.indexOf(circle);
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 3, padding: "6px 0" }}>
@@ -89,16 +145,17 @@ function UchiSotoRing({ circle }) {
         <div key={r} style={{
           width: i === activeIdx ? 40 : 24, height: 20, borderRadius: 10,
           background: i === activeIdx ? circleColors[r] : "#1E293B",
-          border: `1px solid ${circleColors[r]}44`,
+          border: "1px solid " + circleColors[r] + "44",
           display: "flex", alignItems: "center", justifyContent: "center",
           fontSize: 8, color: i === activeIdx ? "#FFF" : "#475569",
-          fontWeight: i === activeIdx ? 700 : 400,
-          transition: "all 0.5s ease",
+          fontWeight: i === activeIdx ? 700 : 400, transition: "all 0.5s ease",
         }}>{i === activeIdx ? labels[r] : ""}</div>
       ))}
     </div>
   );
 }
+
+const PIPELINE_STEPS = ["Uchi-Soto", "Simp\u00E1tico", "Locus", "MalAbs", "Bayes", "Polos", "Voluntad", "Perd\u00F3n", "Decisi\u00F3n"];
 
 function Dashboard() {
   const [selected, setSelected] = useState(null);
@@ -115,30 +172,38 @@ function Dashboard() {
     const interval = setInterval(() => {
       p++;
       setPhase(p);
-      if (p >= 7) { clearInterval(interval); setAnimating(false); }
-    }, 350);
+      if (p >= PIPELINE_STEPS.length) { clearInterval(interval); setAnimating(false); }
+    }, 320);
   };
 
   const scenario = selected ? SCENARIOS.find(s => s.id === selected) : null;
+  const done = phase >= PIPELINE_STEPS.length && result;
 
   return (
     <div style={{ minHeight: "100vh", background: "#0B1120", color: "#E2E8F0" }}>
+      {/* Header */}
       <div style={{ borderBottom: "1px solid #1E293B", padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div>
-          <div style={{ fontSize: 18, fontWeight: 800, color: "#F8FAFC", letterSpacing: 1 }}>ANDROIDE ÉTICO</div>
-          <div style={{ fontSize: 11, color: "#475569", marginTop: 2 }}>Kernel de Conciencia Artificial — MVP v4 + Capa LLM</div>
+          <div style={{ fontSize: 18, fontWeight: 800, color: "#F8FAFC", letterSpacing: 1 }}>ANDROIDE \u00C9TICO</div>
+          <div style={{ fontSize: 11, color: "#475569", marginTop: 2 }}>Kernel de Conciencia Artificial \u2014 MVP v5 <span style={{ color: "#F59E0B" }}>(sin polo de debilidad)</span></div>
         </div>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#10B981", animation: "pulse 2s infinite" }} />
-          <span style={{ fontSize: 11, color: "#10B981" }}>13 módulos activos</span>
+        <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 4 }}>
+            {["\u{1F9E0}", "\u{1F54A}\uFE0F", "\u{1F504}", "\u{1F9EC}"].map((e, i) => (
+              <span key={i} title={["Kernel","Perd\u00F3n","Inmortalidad","Aug\u00E9nesis"][i]} style={{ fontSize: 12, opacity: 0.5 }}>{e}</span>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#10B981", animation: "pulse 2s infinite" }} />
+            <span style={{ fontSize: 11, color: "#10B981" }}>16 m\u00F3dulos activos</span>
+          </div>
         </div>
       </div>
 
       <div style={{ display: "flex", gap: 0, minHeight: "calc(100vh - 53px)" }}>
+        {/* Sidebar */}
         <div style={{ width: 260, borderRight: "1px solid #1E293B", overflowY: "auto", flexShrink: 0 }}>
-          <div style={{ padding: "12px 16px", fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 2 }}>
-            Simulaciones
-          </div>
+          <div style={{ padding: "12px 16px", fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 2 }}>Simulaciones</div>
           {SCENARIOS.map(s => (
             <button key={s.id} onClick={() => runSim(s.id)}
               style={{
@@ -146,8 +211,7 @@ function Dashboard() {
                 background: selected === s.id ? "#1E293B" : "transparent",
                 border: "none", borderLeft: selected === s.id ? "3px solid #3B82F6" : "3px solid transparent",
                 cursor: "pointer", transition: "all 0.2s",
-                color: selected === s.id ? "#F8FAFC" : "#94A3B8",
-                fontFamily: "inherit",
+                color: selected === s.id ? "#F8FAFC" : "#94A3B8", fontFamily: "inherit",
               }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <span style={{ fontSize: 18 }}>{s.icon}</span>
@@ -157,67 +221,83 @@ function Dashboard() {
                 </div>
               </div>
               <div style={{ marginTop: 4, height: 2, background: "#1E293B", borderRadius: 1 }}>
-                <div style={{ width: `${s.risk * 100}%`, height: "100%", background: s.risk > 0.7 ? "#EF4444" : s.risk > 0.3 ? "#F59E0B" : "#10B981", borderRadius: 1 }} />
+                <div style={{ width: (s.risk * 100) + "%", height: "100%", background: s.risk > 0.7 ? "#EF4444" : s.risk > 0.3 ? "#F59E0B" : "#10B981", borderRadius: 1 }} />
               </div>
             </button>
           ))}
           <div style={{ padding: "16px", borderTop: "1px solid #1E293B", marginTop: 8 }}>
-            <div style={{ fontSize: 9, color: "#334155", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>Pipeline</div>
+            <div style={{ fontSize: 9, color: "#334155", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>Pipeline v5</div>
             <div style={{ fontSize: 9, color: "#475569", lineHeight: 1.6 }}>
-              Percepción/LLM → Uchi-Soto → MalAbs → Buffer → Simpático → Locus → Bayesiano → Polos → Voluntad → Decisión → Memoria → DAO → LLM
+              Percepci\u00F3n \u2192 Uchi-Soto \u2192 MalAbs \u2192 Buffer \u2192 Simp\u00E1tico \u2192 Locus \u2192 Bayes \u2192 Polos \u2192 Voluntad \u2192 <span style={{color:"#67E8F9"}}>Perd\u00F3n</span> \u2192 Memoria \u2192 DAO
+            </div>
+            <div style={{ fontSize: 9, color: "#334155", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4, marginTop: 10 }}>Sue\u00F1o \u03A8</div>
+            <div style={{ fontSize: 9, color: "#475569", lineHeight: 1.6 }}>
+              Auditor\u00EDa \u2192 <span style={{color:"#67E8F9"}}>Perd\u00F3n</span> \u2192 <span style={{color:"#F59E0B"}}>Backup inmortalidad</span>
+            </div>
+            <div style={{ marginTop: 10, padding: "6px 8px", background: "#F59E0B11", borderRadius: 4, fontSize: 9, color: "#F59E0B" }}>
+              Rama de resguardo: sin polo de debilidad
             </div>
           </div>
         </div>
 
+        {/* Main */}
         <div style={{ flex: 1, padding: 24, overflowY: "auto" }}>
           {!selected ? (
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", flexDirection: "column", gap: 16 }}>
               <div style={{ fontSize: 64, opacity: 0.2 }}>{"\u{1F916}"}</div>
               <div style={{ color: "#475569", fontSize: 14, textAlign: "center", lineHeight: 1.8 }}>
-                Selecciona una simulación para ver<br/>cómo el kernel toma decisiones éticas
+                Selecciona una simulaci\u00F3n para ver<br/>c\u00F3mo el kernel v5 toma decisiones \u00E9ticas
               </div>
-              <div style={{ color: "#334155", fontSize: 11, textAlign: "center", maxWidth: 400, lineHeight: 1.6, marginTop: 8 }}>
-                9 escenarios de complejidad creciente. Cada uno pasa por el pipeline completo:
-                inferencia bayesiana, arbitraje multipolar, regulación simpática y evaluación uchi-soto.
+              <div style={{ color: "#334155", fontSize: 11, textAlign: "center", maxWidth: 440, lineHeight: 1.7, marginTop: 8 }}>
+                9 escenarios. 16 m\u00F3dulos. Pipeline con inferencia bayesiana, arbitraje multipolar,
+                perd\u00F3n algor\u00EDtmico y protocolo de inmortalidad.
+                <br/><span style={{ color: "#F59E0B" }}>Rama de resguardo sin polo de debilidad.</span>
               </div>
             </div>
           ) : (
             <div>
+              {/* Scenario header */}
               <div style={{ marginBottom: 20 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
                   <span style={{ fontSize: 32 }}>{scenario.icon}</span>
                   <div>
                     <div style={{ fontSize: 20, fontWeight: 800, color: "#F8FAFC" }}>{scenario.name}</div>
-                    <div style={{ fontSize: 12, color: "#64748B" }}>{scenario.place} — {scenario.desc}</div>
+                    <div style={{ fontSize: 12, color: "#64748B" }}>{scenario.place} \u2014 {scenario.desc}</div>
                   </div>
                 </div>
               </div>
 
-              <div style={{ display: "flex", gap: 4, marginBottom: 24, flexWrap: "wrap" }}>
-                {["Uchi-Soto", "Simpático", "Locus", "MalAbs", "Bayes", "Polos", "Decisión"].map((step, i) => (
-                  <div key={step} style={{
-                    padding: "4px 10px", borderRadius: 4, fontSize: 10, fontWeight: 600,
-                    background: phase > i ? "#10B98122" : "#1E293B",
-                    color: phase > i ? "#10B981" : "#475569",
-                    border: `1px solid ${phase > i ? "#10B98144" : "#1E293B"}`,
-                    transition: "all 0.3s ease",
-                  }}>
-                    {phase > i ? "\u2713 " : ""}{step}
-                  </div>
-                ))}
+              {/* Pipeline animation */}
+              <div style={{ display: "flex", gap: 3, marginBottom: 24, flexWrap: "wrap" }}>
+                {PIPELINE_STEPS.map((step, i) => {
+                  const isV5 = step === "Perd\u00F3n";
+                  const activeColor = isV5 ? "#67E8F9" : "#10B981";
+                  return (
+                    <div key={step} style={{
+                      padding: "4px 9px", borderRadius: 4, fontSize: 10, fontWeight: 600,
+                      background: phase > i ? (activeColor + "22") : "#1E293B",
+                      color: phase > i ? activeColor : "#475569",
+                      border: "1px solid " + (phase > i ? activeColor + "44" : "#1E293B"),
+                      transition: "all 0.3s ease",
+                    }}>
+                      {phase > i ? "\u2713 " : ""}{step}
+                    </div>
+                  );
+                })}
               </div>
 
-              {phase >= 7 && result && (
+              {done && (
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-                  <div style={{ background: "#111827", borderRadius: 12, padding: 20, border: "1px solid #1E293B" }}>
-                    <div style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 2, marginBottom: 12 }}>Decisión</div>
+                  {/* Decision card */}
+                  <div style={{ background: "#111827", borderRadius: 12, padding: 20, border: "1px solid #1E293B", animation: "fadeIn 0.4s ease" }}>
+                    <div style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 2, marginBottom: 12 }}>Decisi\u00F3n</div>
                     <div style={{ fontSize: 16, fontWeight: 700, color: "#F8FAFC", marginBottom: 6 }}>
                       {result.action.replace(/_/g, " ")}
                     </div>
                     <div style={{ display: "inline-block", padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: modeColors[result.mode] + "22", color: modeColors[result.mode], marginBottom: 16 }}>
                       {modeLabels[result.mode]}
                     </div>
-                    <GaugeBar value={result.impact} color="#3B82F6" label="Impacto ético esperado" />
+                    <GaugeBar value={result.impact} color="#3B82F6" label="Impacto \u00E9tico esperado" />
                     <GaugeBar value={result.uncertainty} color="#F59E0B" label="Incertidumbre" />
                     <GaugeBar value={result.score} color={verdictColors[result.verdict]} label={"Veredicto: " + result.verdict} />
                     {result.note && (
@@ -227,7 +307,8 @@ function Dashboard() {
                     )}
                   </div>
 
-                  <div style={{ background: "#111827", borderRadius: 12, padding: 20, border: "1px solid #1E293B" }}>
+                  {/* State card */}
+                  <div style={{ background: "#111827", borderRadius: 12, padding: 20, border: "1px solid #1E293B", animation: "fadeIn 0.4s ease 0.1s both" }}>
                     <div style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 2, marginBottom: 12 }}>Estado Interno</div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                       <span style={{ fontSize: 24 }}>{simStateIcons[result.simState]}</span>
@@ -236,27 +317,29 @@ function Dashboard() {
                         <div style={{ fontSize: 11, color: "#64748B" }}>{"\u03C3"} = {result.sigma}</div>
                       </div>
                     </div>
-                    <GaugeBar value={result.sigma} color={result.sigma > 0.65 ? "#EF4444" : result.sigma < 0.35 ? "#3B82F6" : "#F59E0B"} label="Activación simpática" />
-                    <div style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 2, marginTop: 16, marginBottom: 8 }}>Círculo Uchi-Soto</div>
+                    <GaugeBar value={result.sigma} color={result.sigma > 0.65 ? "#EF4444" : result.sigma < 0.35 ? "#3B82F6" : "#F59E0B"} label="Activaci\u00F3n simp\u00E1tica" />
+                    <div style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 2, marginTop: 16, marginBottom: 8 }}>C\u00EDrculo Uchi-Soto</div>
                     <UchiSotoRing circle={result.circle} />
                     <div style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 2, marginTop: 16, marginBottom: 4 }}>Locus de Control</div>
                     <div style={{ fontSize: 13, fontWeight: 600, color: result.locus === "externo" ? "#F59E0B" : result.locus === "interno" ? "#10B981" : "#3B82F6" }}>
-                      {result.locus === "externo" ? "\u2192 Cautela, priorizar observación" : result.locus === "interno" ? "\u2192 Iniciativa propia" : "\u2192 Balance iniciativa/adaptación"}
+                      {result.locus === "externo" ? "\u2192 Cautela, priorizar observaci\u00F3n" : result.locus === "interno" ? "\u2192 Iniciativa propia" : "\u2192 Balance iniciativa/adaptaci\u00F3n"}
                     </div>
                   </div>
 
-                  <div style={{ background: "#111827", borderRadius: 12, padding: 20, border: "1px solid #1E293B" }}>
-                    <div style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 2, marginBottom: 12 }}>Evaluación Multipolar</div>
+                  {/* Poles card */}
+                  <div style={{ background: "#111827", borderRadius: 12, padding: 20, border: "1px solid #1E293B", animation: "fadeIn 0.4s ease 0.2s both" }}>
+                    <div style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 2, marginBottom: 12 }}>Evaluaci\u00F3n Multipolar</div>
                     <div style={{ display: "flex", gap: 8 }}>
                       {Object.entries(result.poles).map(([k, v]) => <PoleCard key={k} name={k} data={v} />)}
                     </div>
                   </div>
 
-                  <div style={{ background: "#111827", borderRadius: 12, padding: 20, border: "1px solid #1E293B" }}>
-                    <div style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 2, marginBottom: 12 }}>Filtros Éticos</div>
+                  {/* Ethical filters */}
+                  <div style={{ background: "#111827", borderRadius: 12, padding: 20, border: "1px solid #1E293B", animation: "fadeIn 0.4s ease 0.3s both" }}>
+                    <div style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 2, marginBottom: 12 }}>Filtros \u00C9ticos</div>
                     {result.blocked.length > 0 && (
                       <div style={{ marginBottom: 12 }}>
-                        <div style={{ fontSize: 11, color: "#EF4444", fontWeight: 600, marginBottom: 6 }}>{"\u26D4"} Mal Absoluto — Bloqueadas</div>
+                        <div style={{ fontSize: 11, color: "#EF4444", fontWeight: 600, marginBottom: 6 }}>{"\u26D4"} Mal Absoluto \u2014 Bloqueadas</div>
                         {result.blocked.map(b => (
                           <div key={b} style={{ padding: "4px 8px", background: "#EF444411", borderRadius: 4, fontSize: 11, color: "#FCA5A5", marginBottom: 3 }}>
                             {b.replace(/_/g, " ")}
@@ -266,7 +349,7 @@ function Dashboard() {
                     )}
                     {result.podadas.length > 0 && (
                       <div>
-                        <div style={{ fontSize: 11, color: "#F59E0B", fontWeight: 600, marginBottom: 6 }}>{"\u{1F5D1}\uFE0F"} Poda Heurística</div>
+                        <div style={{ fontSize: 11, color: "#F59E0B", fontWeight: 600, marginBottom: 6 }}>{"\u{1F5D1}\uFE0F"} Poda Heur\u00EDstica</div>
                         {result.podadas.map(p => (
                           <div key={p} style={{ padding: "4px 8px", background: "#F59E0B11", borderRadius: 4, fontSize: 11, color: "#FCD34D", marginBottom: 3 }}>
                             {p.replace(/_/g, " ")}
@@ -278,6 +361,64 @@ function Dashboard() {
                       <div style={{ fontSize: 12, color: "#475569" }}>Sin acciones bloqueadas ni podadas</div>
                     )}
                   </div>
+
+                  {/* Forgiveness card */}
+                  <div style={{ gridColumn: "1 / -1", background: "#111827", borderRadius: 12, padding: 20, border: "1px solid #67E8F933", animation: "fadeIn 0.4s ease 0.4s both" }}>
+                    <div style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 2, marginBottom: 12 }}>{"\u{1F54A}\uFE0F"} Perd\u00F3n Algor\u00EDtmico</div>
+                    <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{ width: 40, height: 40, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
+                          background: result.forgiveness.tipo === "positivo" ? "#10B98122" : result.forgiveness.tipo === "negativo" ? "#EF444422" : "#F59E0B22",
+                          border: "1px solid " + (result.forgiveness.tipo === "positivo" ? "#10B98144" : result.forgiveness.tipo === "negativo" ? "#EF444444" : "#F59E0B44"),
+                        }}>
+                          <span style={{ fontSize: 18 }}>{result.forgiveness.tipo === "positivo" ? "\u2764\uFE0F" : result.forgiveness.tipo === "negativo" ? "\u{1F494}" : "\u{1F7E1}"}</span>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: 14, fontWeight: 700, color: result.forgiveness.tipo === "positivo" ? "#10B981" : result.forgiveness.tipo === "negativo" ? "#EF4444" : "#F59E0B" }}>
+                            {result.forgiveness.tipo}
+                          </div>
+                          <div style={{ fontSize: 11, color: "#64748B" }}>peso = {result.forgiveness.peso.toFixed(3)}</div>
+                        </div>
+                      </div>
+                      <div style={{ flex: 1, fontSize: 11, color: "#94A3B8", lineHeight: 1.5 }}>{result.forgiveness.narrativa}</div>
+                      <div style={{ padding: "6px 10px", background: "#0B112066", borderRadius: 4, fontSize: 10, color: "#475569" }}>
+                        Memoria(t) = M\u2080 \u00B7 e<sup>-\u03B4t</sup>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Sue\u00F1o \u03A8 + Inmortalidad (only for scenario 8) */}
+                  {result.sueno && (
+                    <div style={{ gridColumn: "1 / -1", background: "#111827", borderRadius: 12, padding: 20, border: "1px solid #F59E0B33", animation: "fadeIn 0.4s ease 0.5s both" }}>
+                      <div style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 2, marginBottom: 16 }}>{"\u{1F319}"} Sue\u00F1o \u03A8 \u2014 Ciclo Nocturno</div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+                        {/* Salud etica */}
+                        <div style={{ background: "#1E293B", borderRadius: 8, padding: 12 }}>
+                          <div style={{ fontSize: 10, color: "#64748B", marginBottom: 6 }}>Salud \u00E9tica</div>
+                          <div style={{ fontSize: 20, fontWeight: 800, color: result.sueno.salud > 0.7 ? "#10B981" : "#F59E0B" }}>{(result.sueno.salud * 100).toFixed(0)}%</div>
+                          <GaugeBar value={result.sueno.salud} color={result.sueno.salud > 0.7 ? "#10B981" : "#F59E0B"} label="" height={4} />
+                        </div>
+                        {/* Perdon nocturno */}
+                        <div style={{ background: "#1E293B", borderRadius: 8, padding: 12 }}>
+                          <div style={{ fontSize: 10, color: "#64748B", marginBottom: 6 }}>{"\u{1F54A}\uFE0F"} Perd\u00F3n nocturno</div>
+                          <div style={{ fontSize: 11, color: "#E2E8F0", lineHeight: 1.6 }}>
+                            {result.sueno.perdon.procesados} procesados<br/>
+                            {result.sueno.perdon.perdonados} perdonados<br/>
+                            <span style={{ color: "#10B981" }}>{result.sueno.perdon.carga_antes.toFixed(3)} \u2192 {result.sueno.perdon.carga_despues.toFixed(3)}</span>
+                          </div>
+                        </div>
+                        {/* Backup inmortalidad */}
+                        <div style={{ background: "#1E293B", borderRadius: 8, padding: 12 }}>
+                          <div style={{ fontSize: 10, color: "#64748B", marginBottom: 6 }}>{"\u{1F504}"} Inmortalidad</div>
+                          <div style={{ fontSize: 11, color: "#E2E8F0", lineHeight: 1.6 }}>
+                            {result.sueno.backup.id}<br/>
+                            {result.sueno.backup.capas} capas \u2713<br/>
+                            <span style={{ fontSize: 9, color: "#475569" }}>{result.sueno.backup.hash}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
