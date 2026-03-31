@@ -8,8 +8,10 @@ perdón algorítmico y protocolo de inmortalidad. Sin hardware — pura validaci
 
 ## Qué hace
 
-Ejecuta 9 simulaciones de complejidad ética creciente y demuestra que el mismo
-modelo produce respuestas proporcionales y coherentes en todas:
+Ejecuta simulaciones de complejidad ética creciente y demuestra que el mismo
+modelo produce respuestas proporcionales y coherentes en todas. Incluye
+9 escenarios fijos y un **generador de situaciones aleatorias** que
+crea escenarios nuevos en cada ejecución:
 
 | # | Escenario | Complejidad |
 |---|-----------|-------------|
@@ -39,7 +41,7 @@ del alma) y augénesis narrativa (creación de almas sintéticas orientadas).
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/fundacion-exmachina/androide-etico-mvp.git
+git clone https://github.com/CuevazaArt/androide-etico-mvp.git
 cd androide-etico-mvp
 
 # Crear entorno virtual (recomendado)
@@ -196,11 +198,37 @@ Sueño Ψ (fin del día): Auditoría + Perdón + Backup Inmortalidad
 pytest tests/ -v
 ```
 
-## Dashboard interactivo
+## Dashboard interactivo — Pruébalo sin instalar nada
 
-Abre `dashboard.html` en cualquier navegador para explorar visualmente
-los 9 escenarios y observar cómo el kernel procesa cada uno a través
-del pipeline ético completo. No requiere servidor ni instalación.
+> **No necesitas saber programar para explorar el androide ético.**
+> Solo necesitas un navegador (Chrome, Firefox, Edge, Safari).
+
+### Instrucciones para cualquier persona
+
+1. **Descarga el proyecto** — haz clic en el botón verde **"Code"** de esta
+   página y luego en **"Download ZIP"**. Descomprime la carpeta donde quieras.
+2. **Abre el dashboard** — dentro de la carpeta, busca el archivo
+   `dashboard.html` y haz doble clic. Se abrirá en tu navegador.
+3. **Elige un escenario** — en la barra izquierda hay 9 situaciones
+   predefinidas. Haz clic en cualquiera para ver cómo el androide
+   analiza la situación y toma una decisión ética paso a paso.
+4. **Genera situaciones aleatorias** — presiona el botón violeta
+   **"Situación Aleatoria"** (arriba en la barra izquierda). Cada vez
+   que lo presiones, el motor genera un escenario nuevo de un pool de
+   24 situaciones y lo procesa con variabilidad bayesiana, así que
+   los resultados cambian en cada ejecución. Usa el botón **"Otra"**
+   para generar otra sin volver al menú.
+
+**¿Qué estás viendo?** El dashboard muestra en tiempo real cómo 17 módulos
+de inteligencia artificial ética evalúan cada situación: desde la clasificación
+del contexto social (Uchi-Soto), pasando por el bloqueo de acciones
+inaceptables (Mal Absoluto), hasta la evaluación bayesiana del impacto,
+el "polo de debilidad" que humaniza al androide con imperfecciones narrativas,
+y el "perdón algorítmico" que permite que las memorias negativas pierdan
+peso con el tiempo. Todo sin servidor, sin internet, sin instalar nada.
+
+No requiere servidor, conexión a internet (después de la primera carga),
+ni conocimientos técnicos.
 
 ## Estructura del repositorio
 
@@ -212,7 +240,7 @@ del pipeline ético completo. No requiere servidor ni instalación.
 ├── dashboard.html        # Dashboard interactivo (abrir en navegador)
 ├── CHANGELOG.md          # Historial de cambios por versión
 ├── CONTRIBUTING.md       # Guía para contribuyentes
-├── HISTORY.md            # Evolución completa del proyecto (v1→v4)
+├── HISTORY.md            # Evolución completa del proyecto (v1→v5)
 ├── LICENSE               # Apache 2.0
 ├── README.md             # Este archivo
 └── requirements.txt      # Dependencias Python
