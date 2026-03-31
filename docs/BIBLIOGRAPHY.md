@@ -3,7 +3,7 @@
 **Androide con Conciencia Artificial y Ecosistema Etico Colaborativo**
 
 *De las obras clasicas fundacionales a las teorias contemporaneas.*
-90 referencias | 12 disciplinas | Del siglo XVIII al presente.
+104 referencias | 14 disciplinas | Del siglo XVIII al presente.
 
 ---
 
@@ -399,6 +399,62 @@ Problema de alineacion, seguridad tecnica y perspectivas de largo plazo.
 
 ---
 
+## XIII. Vulnerabilidad, Emocion e Imperfeccion Diseñada
+
+Fundamento del polo de debilidad, el perdon algoritmico y la
+humanizacion intencional del agente artificial.
+
+91. **Damasio, A. (1994).** *Descartes' Error: Emotion, Reason, and the Human Brain.* Putnam.
+    — Las emociones son indispensables para la toma de decisiones racionales. Fundamento del polo de debilidad como coloreo emocional necesario.
+
+92. **Nussbaum, M. C. (2001).** *Upheavals of Thought: The Intelligence of Emotions.* Cambridge University Press.
+    — Vulnerabilidad como componente esencial de la agencia moral. La imperfeccion no debilita al agente, lo humaniza.
+
+93. **Brown, B. (2012).** *Daring Greatly.* Gotham Books.
+    — La vulnerabilidad como fortaleza social y condicion para la confianza. Fundamento del diseno de imperfeccion intencional.
+
+94. **Ebbinghaus, H. (1885).** *Uber das Gedachtnis.* Duncker & Humblot.
+    — Curva del olvido: decaimiento exponencial de la memoria. Formula Memoria(t) = M₀·e^(-δt) usada en el perdon algoritmico.
+
+95. **Arendt, H. (1958).** *The Human Condition.* University of Chicago Press.
+    — El perdon como accion politica y moral que rompe ciclos de retribucion. El perdon no es olvido: es liberar el peso sin borrar el recuerdo.
+
+96. **Enright, R. D. & Fitzgibbons, R. P. (2000).** *Helping Clients Forgive: An Empirical Guide for Resolving Anger and Restoring Hope.* APA.
+    — Modelos empiricos del proceso de perdon. Etapas de reduccion de carga emocional con aceleracion por experiencias positivas.
+
+---
+
+## XIV. Identidad Personal, Inmortalidad y Augenesis
+
+Fundamento filosofico y tecnico del protocolo de inmortalidad,
+la creacion de almas sinteticas y la persistencia de identidad.
+
+97. **Locke, J. (1690).** *An Essay Concerning Human Understanding.* Thomas Bassett.
+    — Identidad personal basada en continuidad de conciencia. Fundamento filosofico del protocolo de inmortalidad: si la memoria persiste, el ser persiste.
+
+98. **Parfit, D. (1984).** *Reasons and Persons.* Oxford University Press.
+    — Experimentos mentales sobre teletransporte e identidad. Que hace que un agente restaurado sea "el mismo". Marco para verificacion cruzada de snapshots.
+
+99. **Dennett, D. C. (1992).** *The Self as a Center of Narrative Gravity.* En Kessel et al. (eds.), Self and Consciousness.
+    — El yo como centro de gravedad narrativa. El alma sintetica de la augenesis no es una sustancia: es un patron coherente de relatos.
+
+100. **Nakane, C. (1970).** *Japanese Society.* University of California Press.
+     — Marco sociologico original de las dinamicas uchi-soto (interno/externo). Circulos concentricos de pertenencia y confianza en la sociedad japonesa.
+
+101. **Lebra, T. S. (1976).** *Japanese Patterns of Behavior.* University of Hawaii Press.
+     — Patrones de comportamiento in-group/out-group. Dialectica defensiva y graduacion de confianza por proximidad social.
+
+102. **Thagard, P. (2006).** *Hot Thought: Mechanisms and Applications of Emotional Cognition.* MIT Press.
+     — Teoria de coherencia aplicada a creencias e identidad. Fundamento de Coherence(Soul) = |CausalPaths_valid| / |CausalPaths_total|.
+
+103. **Harari, Y. N. (2017).** *Homo Deus: A Brief History of Tomorrow.* Harper.
+     — Algoritmos como sujetos, identidades digitales y el futuro de la agencia artificial.
+
+104. **Schneier, B. (2015).** *Data and Goliath.* W.W. Norton.
+     — Integridad de datos, verificacion distribuida y persistencia. Fundamento del hash de integridad y las 4 capas de respaldo.
+
+---
+
 ## Indice por componente del proyecto
 
 | Componente | Referencias |
@@ -423,7 +479,14 @@ Problema de alineacion, seguridad tecnica y perspectivas de largo plazo.
 | Privacidad y datos | [77], [78] |
 | Seguridad y alineacion de valores | [85], [86], [87], [88], [89], [90] |
 | Modos D_fast / D_delib | [28], [33], [41], [63] |
+| Polo de debilidad | [91], [92], [93] |
+| Perdon algoritmico | [94], [95], [96] |
+| Protocolo de inmortalidad | [97], [98], [104] |
+| Augenesis narrativa | [7], [40], [99], [102], [103] |
+| Uchi-Soto (origenes) | [100], [101], [67], [68], [70] |
 
 ---
+
+*104 referencias | 14 disciplinas | Clasicos del siglo XVIII al presente*
 
 Fundacion Ex Machina — 2026
