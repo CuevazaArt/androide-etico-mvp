@@ -180,6 +180,12 @@ src/
 pytest tests/ -v
 ```
 
+## Dashboard interactivo
+
+Abre `dashboard.html` en cualquier navegador para explorar visualmente
+los 9 escenarios y observar cómo el kernel procesa cada uno a través
+del pipeline ético completo. No requiere servidor ni instalación.
+
 ## Estructura del repositorio
 
 ```
@@ -187,6 +193,7 @@ pytest tests/ -v
 ├── src/                  # Código fuente del kernel ético
 ├── tests/                # Suite de tests formales
 ├── docs/                 # Documentación técnica y conceptual
+├── dashboard.html        # Dashboard interactivo (abrir en navegador)
 ├── CHANGELOG.md          # Historial de cambios por versión
 ├── CONTRIBUTING.md       # Guía para contribuyentes
 ├── HISTORY.md            # Evolución completa del proyecto (v1→v4)
