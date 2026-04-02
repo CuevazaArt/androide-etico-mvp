@@ -31,7 +31,7 @@ tiene raíces trazables en la literatura:
 | Augénesis narrativa | Dennett (1992), Thagard (2006), Harari (2017) |
 
 La bibliografía completa con las 104 referencias está en
-[`docs/BIBLIOGRAPHY.md`](docs/BIBLIOGRAPHY.md).
+[`BIBLIOGRAPHY.md`](BIBLIOGRAPHY.md).
 
 ---
 
@@ -40,7 +40,7 @@ La bibliografía completa con las 104 referencias está en
 - 40+ documentos de diseño analizados y consolidados.
 - Arquitectura de 7 capas documentada.
 - Formalización matemática completa.
-- Bibliografía de 104 referencias en 14 disciplinas (ver `docs/BIBLIOGRAPHY.md`).
+- Bibliografía de 104 referencias en 14 disciplinas (ver `BIBLIOGRAPHY.md`).
 - **Artefacto principal:** `Androide_Etico_Analisis_Integral_v3.docx`
   (disponible en `docs/`).
 

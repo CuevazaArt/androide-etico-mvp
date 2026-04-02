@@ -236,8 +236,8 @@ ni conocimientos técnicos.
 .
 ├── src/                  # Código fuente del kernel ético
 ├── tests/                # Suite de tests formales
-├── docs/                 # Bibliografía académica (104 refs, 14 disciplinas)
 ├── dashboard.html        # Dashboard interactivo (abrir en navegador)
+├── BIBLIOGRAPHY.md       # 104 referencias académicas en 14 disciplinas
 ├── CHANGELOG.md          # Historial de cambios por versión
 ├── CONTRIBUTING.md       # Guía para contribuyentes
 ├── HISTORY.md            # Evolución completa del proyecto (v1→v5)
